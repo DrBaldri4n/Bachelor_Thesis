@@ -1,0 +1,67 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{anyt/global//global/global}
+  \entry{mathcomm}{online}{}
+    \name{author}{1}{}{%
+      {{hash=KC}{%
+         family={Kern},
+         familyi={K\bibinitperiod},
+         given={Carsten},
+         giveni={C\bibinitperiod},
+      }}%
+    }
+    \keyw{online}
+    \strng{namehash}{KC1}
+    \strng{fullhash}{KC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Ker}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \field{note}{Unterst\"utzung von Studierenden in Mathematik}
+    \field{title}{\texttt{http://www.MathComm.net}}
+    \verb{url}
+    \verb http://www.mathcomm.net
+    \endverb
+  \endentry
+
+  \entry{buch}{book}{}
+    \name{author}{1}{}{%
+      {{hash=MM}{%
+         family={Mustermann},
+         familyi={M\bibinitperiod},
+         given={Max},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Verlag}%
+    }
+    \strng{namehash}{MM1}
+    \strng{fullhash}{MM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Mus13}
+    \field{sortinit}{M}
+    \field{sortinithash}{M}
+    \field{title}{Ich bin ein Buch}
+    \field{year}{2013}
+  \endentry
+\enddatalist
+\endinput
