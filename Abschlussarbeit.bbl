@@ -17,51 +17,171 @@
 \endgroup
 
 \datalist[entry]{anyt/global//global/global}
-  \entry{mathcomm}{online}{}
+  \entry{ladeinfrastruktur}{misc}{}
     \name{author}{1}{}{%
-      {{hash=KC}{%
-         family={Kern},
-         familyi={K\bibinitperiod},
-         given={Carsten},
-         giveni={C\bibinitperiod},
+      {{hash=E}{%
+         family={{European Automobile Manufacturers Association (ACEA)}},
+         familyi={E\bibinitperiod},
       }}%
     }
-    \keyw{online}
-    \strng{namehash}{KC1}
-    \strng{fullhash}{KC1}
+    \strng{namehash}{E1}
+    \strng{fullhash}{E1}
+    \field{shorthand}{ACEA23}
+    \field{label}{ACEA23}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{labelalpha}{Ker}
-    \field{sortinit}{K}
-    \field{sortinithash}{K}
-    \field{note}{Unterst\"utzung von Studierenden in Mathematik}
-    \field{title}{\texttt{http://www.MathComm.net}}
-    \verb{url}
-    \verb http://www.mathcomm.net
-    \endverb
+    \field{labelalpha}{ACEA23}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \field{howpublished}{\url{https://www.acea.auto/figure/interactive-map-correlation-between-electric-car-sales-and-charging-point-availability-2023-data/}}
+    \field{note}{Accessed: 2025-07-09}
+    \field{title}{Interactive Map: Correlation Between Electric Car Sales and Charging Point Availability - 2023 Data}
+    \field{year}{2023}
   \endentry
 
-  \entry{buch}{book}{}
-    \name{author}{1}{}{%
-      {{hash=MM}{%
-         family={Mustermann},
+  \entry{nature2025}{article}{}
+    \name{author}{4}{}{%
+      {{hash=MSB}{%
+         family={Mitikiri},
          familyi={M\bibinitperiod},
-         given={Max},
+         given={Sagar\bibnamedelima Babu},
+         giveni={S\bibinitperiod\bibinitdelim B\bibinitperiod},
+      }}%
+      {{hash=TY}{%
+         family={Tiwari},
+         familyi={T\bibinitperiod},
+         given={Yash},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=SVL}{%
+         family={Srinivas},
+         familyi={S\bibinitperiod},
+         given={Vedantham\bibnamedelima Lakshmi},
+         giveni={V\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+      {{hash=PM}{%
+         family={Pal},
+         familyi={P\bibinitperiod},
+         given={Mayukha},
          giveni={M\bibinitperiod},
       }}%
     }
-    \list{publisher}{1}{%
-      {Verlag}%
-    }
-    \strng{namehash}{MM1}
-    \strng{fullhash}{MM1}
+    \strng{namehash}{MSB+1}
+    \strng{fullhash}{MSBTYSVLPM2}
+    \field{shorthand}{EntryPoints25}
+    \field{label}{EntryPoints25}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{labelalpha}{Mus13}
-    \field{sortinit}{M}
-    \field{sortinithash}{M}
-    \field{title}{Ich bin ein Buch}
-    \field{year}{2013}
+    \field{labelalpha}{EntryPoints25}
+    \field{sortinit}{E}
+    \field{sortinithash}{E}
+    \verb{doi}
+    \verb 10.1038/s41598-025-00400-z
+    \endverb
+    \field{note}{Accessed: 2025-07-09}
+    \field{number}{1}
+    \field{pages}{400}
+    \field{title}{Regression based anomaly detection in electric vehicle state of charge fluctuations through analysis of EVCI data}
+    \verb{url}
+    \verb https://www.nature.com/articles/s41598-025-00400-z
+    \endverb
+    \field{volume}{15}
+    \field{journaltitle}{Scientific Reports}
+    \field{year}{2025}
+  \endentry
+
+  \entry{EU2050}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=E}{%
+         family={{European Commission}},
+         familyi={E\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{E2}
+    \strng{fullhash}{E2}
+    \field{shorthand}{EU2050}
+    \field{label}{EU2050}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{EU2050}
+    \field{sortinit}{E}
+    \field{sortinithash}{E}
+    \field{howpublished}{\url{https://climate.ec.europa.eu/eu-action/climate-strategies-targets/2050-long-term-strategy_en}}
+    \field{note}{Accessed: 2025-07-09}
+    \field{title}{2050 long-term strategy: Climate-neutral Europe by 2050}
+    \field{year}{2020}
+  \endentry
+
+  \entry{paper_relevance_EVSE}{article}{}
+    \name{author}{4}{}{%
+      {{hash=MSB}{%
+         family={Mitikiri},
+         familyi={M\bibinitperiod},
+         given={Sagar\bibnamedelima Babu},
+         giveni={S\bibinitperiod\bibinitdelim B\bibinitperiod},
+      }}%
+      {{hash=TY}{%
+         family={Tiwari},
+         familyi={T\bibinitperiod},
+         given={Yash},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=SVL}{%
+         family={Srininvas},
+         familyi={S\bibinitperiod},
+         given={Vedantham\bibnamedelima Lakshmi},
+         giveni={V\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+      {{hash=PM}{%
+         family={Pal},
+         familyi={P\bibinitperiod},
+         given={Mayukha},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{MSB+1}
+    \strng{fullhash}{MSBTYSVLPM1}
+    \field{shorthand}{EVSE24}
+    \field{label}{EVSE24}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{EVSE24}
+    \field{sortinit}{E}
+    \field{sortinithash}{E}
+    \field{note}{Accessed: 2025-07-09}
+    \field{title}{Regression Based Anomaly Detection in Electric Vehicle State of Charge Fluctuations Through Analysis of EVCI Data}
+    \verb{url}
+    \verb https://arxiv.org/abs/2401.01580v1
+    \endverb
+    \field{journaltitle}{arXiv preprint arXiv:2401.01580v1}
+    \field{year}{2024}
+  \endentry
+
+  \entry{Number_of_EVSE_sales}{report}{}
+    \name{author}{1}{}{%
+      {{hash=I}{%
+         family={{International Energy Agency}},
+         familyi={I\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{I1}
+    \strng{fullhash}{I1}
+    \field{shorthand}{IEA22}
+    \field{label}{IEA22}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{IEA22}
+    \field{sortinit}{I}
+    \field{sortinithash}{I}
+    \field{note}{Accessed: 2025-07-09}
+    \field{title}{Global EV Outlook 2022}
+    \verb{url}
+    \verb https://www.iea.org/reports/global-ev-outlook-2022
+    \endverb
+    \list{institution}{1}{%
+      {International Energy Agency}%
+    }
+    \field{year}{2022}
   \endentry
 \enddatalist
 \endinput

@@ -29,18 +29,18 @@
 \setcounter{page}{1} 
 
 % ----------------------------------------------------------------------------------------------------------
-% Eigensctändigkeitserklaerung
+% Eigenständigkeitserklaerung
 % ----------------------------------------------------------------------------------------------------------
-\include{inhalt/erklaerung}
+\include{content/chapter/formular_stuff/erklaerung}
 
 % ----------------------------------------------------------------------------------------------------------
 % Abstract
 % ----------------------------------------------------------------------------------------------------------
-\include{inhalt/abstract}
+\include{content/chapter/abstract}
 
 
 % ----------------------------------------------------------------------------------------------------------
-% Inhaltsverzeichnis
+% contentsverzeichnis
 % ----------------------------------------------------------------------------------------------------------
 \titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
 \tableofcontents
@@ -50,14 +50,7 @@
 % ----------------------------------------------------------------------------------------------------------
 % List of Figures
 % ----------------------------------------------------------------------------------------------------------
-\lhead{}
-\rhead{List of Figures}
-\section{List of Figures}
-\begin{acronym}[KDE]
-\acro{BA}[BA]{Bachelorarbeit}
-\acro{MA}[MA]{Masterarbeit}
-\end{acronym}
-\pagebreak
+\include{content/chapter/formular_stuff/list_of_figures}
 
 % ----------------------------------------------------------------------------------------------------------
 % List of Tables (optional)
@@ -83,19 +76,10 @@
 % ----------------------------------------------------------------------------------------------------------
 % List of Abbreviations (optional)
 % ----------------------------------------------------------------------------------------------------------
-\lhead{}
-\rhead{List of Abbreviations}
-\listoftables
-\section{List of Abbreviations}
-\begin{acronym}[KDE]
-\acro{BA}[BA]{Bachelorarbeit}
-\acro{MA}[MA]{Masterarbeit}
-\end{acronym}
-\pagebreak
-
+\include{content/chapter/abstract/abbreviations}
 
 % ----------------------------------------------------------------------------------------------------------
-% Inhalt
+% content
 % ----------------------------------------------------------------------------------------------------------
 % Format für die Überschriften
 \titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
@@ -111,7 +95,7 @@
 \renewcommand{\sectionmark}[1]{\markright{#1}}
 \renewcommand{\subsectionmark}[1]{}
 \renewcommand{\subsubsectionmark}[1]{}
-\lhead{Kapitel \thesection}
+\lhead{Chapter \thesection}
 \rhead{\rightmark}
 
 %\onehalfspacing
@@ -123,18 +107,9 @@
 \setcounter{page}{1}
 
 % ----------------------------------------------------------------------------------
-% Kapitel: Introduction
+% Kapitel: introduction
 % ----------------------------------------------------------------------------------
-\section{Introduction}
-
-\subsection{Motivation and relevance of anomaly detection in Electric Vehicle Supply Equipment (EVSE)}
-
-Kann ich hier einfach reinschreiben was ich will?
-test testsetse ts ASDASgAS 
-
-\subsection{Challenges in securing EVSE infrastructure}
-
-\subsection{Overview of AI-based approaches}
+\include{content/chapter/introduction/Motivation_and_Relevance}
 
 
 \pagebreak
@@ -143,11 +118,11 @@ test testsetse ts ASDASgAS
 % ----------------------------------------------------------------------------------
 \section{Fundamentals and Key Terminologies}
 
-\subsection{Anomaly detection basics}
+\subsection{Basics of Anomaly Detection}
 
-\subsection{Introduction to Decision Trees and feature importance}
+\subsection{introduction to Decision Trees, Random Forest, Isolation Forest, LSTM, and Feature Importance}
 
-\subsection{LSTM (Long Short-Term Memory) architecture overview}
+\subsection{Overview of LSTM (Long Short-Term Memory) Architecture}
 
 
 \pagebreak
@@ -161,22 +136,31 @@ test testsetse ts ASDASgAS
 % ----------------------------------------------------------------------------------
 % Kapitel: Data Set and Preprocessing
 % ----------------------------------------------------------------------------------
-\section{Data Set and Preprocessing}
+\section{Data Acquisition and Preprocessing}
 
-\subsection{Description of data sources for EVSE anomaly detection}
+\subsection{Description of Data Sources for EVSE Anomaly Detection}
+
+\subsection{Exploratory Data Analysis}
 
 \subsection{Data preprocessing steps}
+
+\subsection{Integration of Prometheus}
+
+\subsection{Comparison of Public and Self-Generated Datasets}
+
 
 
 \pagebreak
 % ----------------------------------------------------------------------------------
 % Kapitel: Feature Selection Using Decision Tree
 % ----------------------------------------------------------------------------------
-\section{Feature Selection Using Decision Tree}
+\section{Feature Selection}
 
-\subsection{Rationale for feature selection with Decision Trees}
+\subsection{Rationale for Feature Selection Using Decision Trees}
 
-\subsection{Process of ranking and selecting the most important features from the original set}
+\subsection{Rationale for Feature Selection Based on Changes in Attack and Benign Data}
+
+\subsection{Process for Ranking and Selecting the Most Important Features}
 
 
 \pagebreak
@@ -185,28 +169,24 @@ test testsetse ts ASDASgAS
 % ----------------------------------------------------------------------------------
 \section{Design Methodology and LSTM Implementation}
 
-\subsection{Building the LSTM model using only the selected features}
+\subsection{Building the LSTM Model Using Selected Features}
 
-\subsection{Model training and validation steps}
+\subsection{Model Training and Validation Steps}
 
-\subsection{Parameter selection and tuning}
+\subsection{Parameter Selection and Tuning}
 
 
 \pagebreak
 % ----------------------------------------------------------------------------------
-% Kapitel: Experimental Analysis
+% Kapitel: Analysis and Evaluation
 % ----------------------------------------------------------------------------------
-%7.1 mit meinem LSTM kann ich auch die Angriffe wie im Datensatz
-%7.2 LSTM archi auf uns anwenden
-%7.3 visualisierung und vergleich von Öffentliche und Test umgebung
+\section{Analysis and Evaluation}
 
-\section{Experimental Analysis}
+\subsection{Experimental Setup and Evaluation Metrics}
 
-\subsection{Experimental setup and evaluation metrics}
+\subsection{Results of Anomaly Detection Using the Machine Learning Model}
 
-\subsection{Results of anomaly detection using the LSTM model}
-
-\subsection{Visualization and interpretation of detected anomalies}
+\subsection{Visualization and Interpretation of Detected Anomalies}
 
 
 \pagebreak
@@ -214,13 +194,6 @@ test testsetse ts ASDASgAS
 % Kapitel: Discussion
 % ----------------------------------------------------------------------------------
 \section{Discussion}
-
-
-\pagebreak
-% ----------------------------------------------------------------------------------
-% Kapitel: Conclusion
-% ----------------------------------------------------------------------------------
-\section{Conclusion}
 
 
 \pagebreak
@@ -235,28 +208,7 @@ test testsetse ts ASDASgAS
 % Kleine Einführung in LaTeX-Elemente
 % ----------------------------------------------------------------------------------
 \section{\LaTeX-Elemente}
-Dieser Abschnitt beinhaltet lediglich einige Informationen über \LaTeX-Distributionen, Editoren und \LaTeX-Elemente, die Ihnen beim Einstieg in das \LaTeX-Textsatzsystem helfen sollen.
-
-\subsection{\LaTeX-Distributionen nach Betriebssystemen}
-
-\subsubsection{\LaTeX-Distributionen}
-Folgende Haupt-\LaTeX-Distributionen stehen Ihnen zur Verfügung:
-\begin{itemize}
-  \item Windows:\quad \texttt{MiKTeX}\quad Webseite:\quad\url{http://www.miktex.org}
-  \item Linux/Unix:\quad \texttt{TeX Live}\quad Webseite:\quad\url{http://tug.org/texlive/}
-  \item Mac OS:\quad \texttt{MacTeX}\quad Webseite:\quad\url{http://www.tug.org/mactex/}
-\end{itemize}
-
-\subsubsection{\LaTeX-Editoren}
-Auf folgenden Webseiten können Sie einige hilfreiche \LaTeX-Editoren finden:
-\begin{itemize}
-  \item Windows/Linux/Mac OS: \url{http://www.xm1math.net/texmaker/}
-  \item Windiws: \url{http://www.texniccenter.org/}
-  \item Mac OS: \url{http://pages.uoregon.edu/koch/texshop/}
-\end{itemize}
-
-Falls bei den oben genannten Editoren kein passender vorhanden war, findet sich auf Wikipedia eine Zusammenstellung vieler weiterer \LaTeX-Editoren:\\[1em]
-\hspace*{3cm}\url{https://en.wikipedia.org/wiki/Comparison_of_TeX_editors}
+Dieser Abschnitt becontentet lediglich einige Informationen über \LaTeX-Distributionen, Editoren und \LaTeX-Elemente, die Ihnen beim Einstieg in das \LaTeX-Textsatzsystem helfen sollen.
 
 
 \subsection{Bilder}
@@ -266,7 +218,7 @@ Zum Einfügen eines Bildes, siehe Abbildung \ref{fig:reversi01}, werden die \tex
 \begin{minipage}{\linewidth}
 	\centering
 	\includegraphics[width=0.5\linewidth]{pics/gamefield01.png}
-	\captionof{figure}[Spielfeld 01]{Unbespieltes Spielfeld\footnotemark }
+	\captionof{figure}[Spielfeld 01]{Unbespieltes Spielfeld\footnotemark}
 	\label{fig:reversi01}
 \end{minipage}
 \footnotetext{Diesem Spielfeld wurden noch keine Spieler zugewiesen (daher die dunklen Spielsteine)}
@@ -375,18 +327,18 @@ Literatur und Quellen werden in zwei getrennte Verzeichnisse aufgeteilt. Als Unt
 \addcontentsline{toc}{section}{Anhang}
 \addtocontents{toc}{\vspace{-0.5em}}
 
-Inhalt des beigefügten Datenträgers:
+content des beigefügten Datenträgers:
 \begin{itemize}
   \item $\ldots$
   \item $\ldots$
 \end{itemize}
 
 \section{Domändenmodell}
-Ein toller Anhang, der nicht nur als \glqq{}\emph{Müllhalde}\grqq{} genutzt wird, sondern in dem Bilder und Inhalte auch mit eigenen Worten erklärt werden und den man auch für sich alleine lesen kann. Es sollten auch Referenzen auf die zugehörige ausführliche Behandlung im Hauptteil inklusive Seitenangabe mit $\backslash$\texttt{pageref} gegeben werden.
+Ein toller Anhang, der nicht nur als \glqq{}\emph{Müllhalde}\grqq{} genutzt wird, sondern in dem Bilder und contente auch mit eigenen Worten erklärt werden und den man auch für sich alleine lesen kann. Es sollten auch Referenzen auf die zugehörige ausführliche Behandlung im Hauptteil inklusive Seitenangabe mit $\backslash$\texttt{pageref} gegeben werden.
 
 \subsection*{Screenshot}
 \label{app:screenshot}
-Unterkategorie, die nicht im Inhaltsverzeichnis auftaucht.
+Unterkategorie, die nicht im contentsverzeichnis auftaucht.
 
 \appendix
 

@@ -2,8 +2,11 @@ This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: Abschlussarbeit.aux
 The style file: biblatex.bst
-A level-1 auxiliary file: inhalt/erklaerung.aux
-A level-1 auxiliary file: inhalt/abstract.aux
+A level-1 auxiliary file: content/chapter/formular_stuff/erklaerung.aux
+A level-1 auxiliary file: content/chapter/abstract.aux
+A level-1 auxiliary file: content/chapter/formular_stuff/list_of_figures.aux
+A level-1 auxiliary file: content/chapter/abstract/abbreviations.aux
+A level-1 auxiliary file: content/chapter/introduction/Motivation_and_Relevance.aux
 Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
 Reallocated global_strs (elt_size=200001) to 20 items from 10.
 Reallocated glb_str_end (elt_size=4) to 20 items from 10.
@@ -21,47 +24,50 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: Abschlussarbeit-blx.bib
 Database file #2: literatur.bib
+Warning--I didn't find a database entry for "buch"
+Warning--I didn't find a database entry for "mathcomm"
 Biblatex version: 3.19
 Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
-You've used 3 entries,
+You've used 6 entries,
             6399 wiz_defined-function locations,
-            1215 strings with 9209 characters,
-and the built_in function-call counts, 10677 in all, are:
-= -- 644
-> -- 244
-< -- 73
-+ -- 240
-- -- 84
-* -- 633
-:= -- 1214
+            1249 strings with 10571 characters,
+and the built_in function-call counts, 40660 in all, are:
+= -- 3188
+> -- 572
+< -- 184
++ -- 924
+- -- 205
+* -- 3069
+:= -- 4541
 add.period$ -- 0
-call.type$ -- 3
-change.case$ -- 29
+call.type$ -- 6
+change.case$ -- 90
 chr.to.int$ -- 44
-cite$ -- 4
-duplicate$ -- 1089
-empty$ -- 997
-format.name$ -- 103
-if$ -- 2263
+cite$ -- 10
+duplicate$ -- 3741
+empty$ -- 3789
+format.name$ -- 314
+if$ -- 8423
 int.to.chr$ -- 0
-int.to.str$ -- 5
+int.to.str$ -- 15
 missing$ -- 0
-newline$ -- 67
-num.names$ -- 99
-pop$ -- 732
+newline$ -- 187
+num.names$ -- 247
+pop$ -- 1818
 preamble$ -- 1
-purify$ -- 33
+purify$ -- 112
 quote$ -- 0
-skip$ -- 422
+skip$ -- 982
 stack$ -- 0
-substring$ -- 977
-swap$ -- 254
-text.length$ -- 82
-text.prefix$ -- 4
+substring$ -- 6291
+swap$ -- 833
+text.length$ -- 172
+text.prefix$ -- 5
 top$ -- 1
-type$ -- 90
+type$ -- 192
 warning$ -- 0
-while$ -- 181
+while$ -- 522
 width$ -- 0
-write$ -- 65
+write$ -- 182
+(There were 2 warnings)
