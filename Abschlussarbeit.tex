@@ -55,15 +55,7 @@
 % ----------------------------------------------------------------------------------------------------------
 % List of Tables (optional)
 % ----------------------------------------------------------------------------------------------------------
-\lhead{}
-\rhead{List of Tables}
-%\listoftables
-\section{List of Tables}
-\begin{acronym}[KDE]
-\acro{BA}[BA]{Bachelorarbeit}
-\acro{MA}[MA]{Masterarbeit}
-\end{acronym}
-\pagebreak
+\include{content/chapter/formular_stuff/list_of_tables}
 
 % ----------------------------------------------------------------------------------------------------------
 % Listingsverzeichnis (optional; Code nur, wenn wirklich sinnvoll und wichtig)
@@ -107,34 +99,36 @@
 \setcounter{page}{1}
 
 % ----------------------------------------------------------------------------------
-% Kapitel: introduction
+% Kapitel: introduction 5
 % ----------------------------------------------------------------------------------
-\include{content/chapter/introduction/Motivation_and_Relevance}
+\section{Introduction}
+\input{content/chapter/1_introduction/1.1_Motivation_and_Relevance}
+\include{content/chapter/1_introduction/1.2_Challenges_in_securing}
+\include{content/chapter/1_introduction/1.3_Overview_AI_approaches}
 
 
 \pagebreak
 % ----------------------------------------------------------------------------------
-% Kapitel: Fundamentals and Key Terminologies
+% Kapitel: Fundamentals and Key Terminologies 5
 % ----------------------------------------------------------------------------------
 \section{Fundamentals and Key Terminologies}
-
-\subsection{Basics of Anomaly Detection}
-
-\subsection{introduction to Decision Trees, Random Forest, Isolation Forest, LSTM, and Feature Importance}
-
-\subsection{Overview of LSTM (Long Short-Term Memory) Architecture}
+\input{content/chapter/2_Fundamentals/2.1_Basics_of_Anomaly_Detection}
+\include{content/chapter/2_Fundamentals/2.2_Introcution_ML_models}
+\include{content/chapter/2_Fundamentals/2.3_Overview_of_LSTM}
 
 
 \pagebreak
 % ----------------------------------------------------------------------------------
-% Kapitel: Related Work
+% Kapitel: Related Work 2
 % ----------------------------------------------------------------------------------
 \section{Related Work}
 
+https://arxiv.org/html/2401.01580v1 - Grafik von predicted und real values of charging situation of an EV
+
 
 \pagebreak
 % ----------------------------------------------------------------------------------
-% Kapitel: Data Set and Preprocessing
+% Kapitel: Data Acquisition and Preprocessing 9
 % ----------------------------------------------------------------------------------
 \section{Data Acquisition and Preprocessing}
 
@@ -152,7 +146,7 @@
 
 \pagebreak
 % ----------------------------------------------------------------------------------
-% Kapitel: Feature Selection Using Decision Tree
+% Kapitel: Feature Selection 5
 % ----------------------------------------------------------------------------------
 \section{Feature Selection}
 
@@ -165,7 +159,7 @@
 
 \pagebreak
 % ----------------------------------------------------------------------------------
-% Kapitel: Design Methodology and LSTM Implementation
+% Kapitel: Design Methodology and LSTM Implementation 5
 % ----------------------------------------------------------------------------------
 \section{Design Methodology and LSTM Implementation}
 
@@ -178,7 +172,7 @@
 
 \pagebreak
 % ----------------------------------------------------------------------------------
-% Kapitel: Analysis and Evaluation
+% Kapitel: Analysis and Evaluation 5
 % ----------------------------------------------------------------------------------
 \section{Analysis and Evaluation}
 
@@ -191,14 +185,14 @@
 
 \pagebreak
 % ----------------------------------------------------------------------------------
-% Kapitel: Discussion
+% Kapitel: Discussion 2
 % ----------------------------------------------------------------------------------
 \section{Discussion}
 
 
 \pagebreak
 % ----------------------------------------------------------------------------------
-% Kapitel: Future Work
+% Kapitel: Future Work 2
 % ----------------------------------------------------------------------------------
 \section{Conclusion/Future Work}
 
