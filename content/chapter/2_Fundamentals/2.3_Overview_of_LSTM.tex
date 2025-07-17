@@ -1,2 +1,37 @@
 \subsection{Overview of LSTM (Long Short-Term Memory) Architecture}
 
+In this chapter, I want to provide a detailed overview of the LSTM architecture, as it is the most frequently used and complex model in my work.\\
+Long Short-Term Memory, or LSTM for short, was developed in 1997 by Sepp Hochreiter and Jürgen Schmidhuber as a solution to the vanishing gradient problem that occurs in traditional Recurrent Neural Networks (RNNs) \cite{LSTM_understanding}. It allows the network to learn dependencies over much longer time sequences, which is particularly important in my datasets, where attacks can be insidious and not immediately obvious.\\
+This addresses one of the core limitations of traditional RNNs, which struggle to learn long-term dependencies due to the vanishing gradient problem. When training these networks, the error signals either explode—causing oscillating weights and unstable learning—or vanish, preventing the network from learning dependencies over extended time periods. Standard RNNs can typically bridge about 5 to 10 time steps, whereas LSTMs are capable of learning dependencies over 1,000 or more time steps \cite{LSTM_understanding}, LSTMs process inputs sequentially, with a constant runtime of $\mathcal{O}(1)$ per time step.\\
+But how does this work, and how is it possible to achieve this with constant time complexity?\\
+The LSTM architecture consists of six different internal states that are processed in a specific sequence to achieve this goal.
+
+\begin{itemize}
+    \item \textbf{Forget Gate:} The forget gate calculates a dynamic value between 0 and 1 that scales the previous cell state. A value of 0 means "forget everything" and a value of 1 means "keep everything". This allows the network to selectively forget information that is no longer relevant.
+    \item \textbf{Input Gate:} The Input gate decide how much of the new information should be added to the new cell state at the current time step. It is a kind of protective mechanism that tries to prevent irrelvant inputs from being added to the cell state.
+    \item \textbf{Candidate Values:} The candidate values are the new information that get in form of squased values that get written into the memory cell. 
+    \item \textbf{Cell State Update:} The cell state is updated by simultaneously scaling down the existing state via the forget gate and adding in the gated candidate values. This allows the network to maintain a stable memory while also incorporating new information.
+    \item \textbf{Output Gate:} The output gate determines which parts of the cell state should be realy becomes the output of the LSTM and protecting in this way the network from sharing unnecessary information too early.
+    \item \textbf{Hidden State:} The hidden state is the final output of the LSTM for the current time step and what the outpute gate allows to be shared with the next time step. 
+\end{itemize}
+\cite{LSTM_understanding}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{3.5cm}|p{5.3cm}|p{5.3cm}|}
+		\hline
+		\textbf{\makecell[c]{Machine\\Learning Model}} & \textbf{\makecell[c]{Advantages}} & \textbf{\makecell[c]{Disadvantages}} \\
+		\hline
+		\multirow{3}{=}{\centering\makecell[c]{\textbf{Long Short-Term}\\\textbf{Memory}}} 
+		& Excellent long-term memory capabilities 
+		& Fixed network topology – cannot dynamically adjust memory capacity \\
+		\cline{2-3}
+		& Selective information processing through gates 
+		& Complexity – more parameters than simple RNNs \\
+		\cline{2-3}
+		& Stable learning without gradient explosion/vanishing 
+		& Modularization challenges – unclear how to optimally structure networks \\
+		\hline
+	\end{tabular}
+	\caption{Strengths and Limitations of LSTM. Own illustration based on \cite{LSTM_understanding}.}
+	\label{tab:lstm_strengths_limitations}
+\end{table}
