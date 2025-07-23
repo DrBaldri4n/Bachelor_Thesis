@@ -36,7 +36,7 @@
 % ----------------------------------------------------------------------------------------------------------
 % Abstract
 % ----------------------------------------------------------------------------------------------------------
-\include{content/chapter/abstract}
+\include{content/chapter/abstract/abstract}
 
 
 % ----------------------------------------------------------------------------------------------------------
@@ -50,25 +50,18 @@
 % ----------------------------------------------------------------------------------------------------------
 % List of Figures
 % ----------------------------------------------------------------------------------------------------------
-\include{content/chapter/formular_stuff/list_of_figures}
+\listoffigures
 
 % ----------------------------------------------------------------------------------------------------------
 % List of Tables (optional)
 % ----------------------------------------------------------------------------------------------------------
-\include{content/chapter/formular_stuff/list_of_tables}
+% \listoftables
 
-% ----------------------------------------------------------------------------------------------------------
-% Listingsverzeichnis (optional; Code nur, wenn wirklich sinnvoll und wichtig)
-% ----------------------------------------------------------------------------------------------------------
-\lhead{}
-\rhead{Quellcodeverzeichnis}
-\lstlistoflistings
-\pagebreak
 
 % ----------------------------------------------------------------------------------------------------------
 % List of Abbreviations (optional)
 % ----------------------------------------------------------------------------------------------------------
-\include{content/chapter/abstract/abbreviations}
+\include{content/chapter/formular_stuff/abbreviations}
 
 % ----------------------------------------------------------------------------------------------------------
 % content
@@ -98,13 +91,15 @@
 \pagenumbering{arabic}
 \setcounter{page}{1}
 
+
 % ----------------------------------------------------------------------------------
 % Kapitel: introduction 5
 % ----------------------------------------------------------------------------------
 \section{Introduction}
 \input{content/chapter/1_introduction/1.1_Motivation_and_Relevance}
-\include{content/chapter/1_introduction/1.2_Challenges_in_securing}
-\include{content/chapter/1_introduction/1.3_Overview_AI_approaches}
+\input{content/chapter/1_introduction/1.2_Overview_AI_approaches}
+\input{content/chapter/1_introduction/1.3_Researchquestions}
+\input{content/chapter/1_introduction/1.4_Structure of the Thesis}
 
 
 \pagebreak
@@ -113,8 +108,8 @@
 % ----------------------------------------------------------------------------------
 \section{Fundamentals and Key Terminologies}
 \input{content/chapter/2_Fundamentals/2.1_Basics_of_Anomaly_Detection}
-\include{content/chapter/2_Fundamentals/2.2_Introcution_ML_models}
-\include{content/chapter/2_Fundamentals/2.3_Overview_of_LSTM}
+\input{content/chapter/2_Fundamentals/2.2_Introcution_ML_models}
+\input{content/chapter/2_Fundamentals/2.3_Overview_of_LSTM}
 
 
 \pagebreak
@@ -122,68 +117,54 @@
 % Kapitel: Related Work 2
 % ----------------------------------------------------------------------------------
 \section{Related Work}
-
-https://arxiv.org/html/2401.01580v1 - Grafik von predicted und real values of charging situation of an EV
-
+\input{content/chapter/3_Related_Work/3.1_EVSE}
+\input{content/chapter/3_Related_Work/3.2_AI}
 
 \pagebreak
 % ----------------------------------------------------------------------------------
-% Kapitel: Data Acquisition and Preprocessing 9
+% Kapitel: Data Acquisition 9
 % ----------------------------------------------------------------------------------
-\section{Data Acquisition and Preprocessing}
-
-\subsection{Description of Data Sources for EVSE Anomaly Detection}
-
-\subsection{Exploratory Data Analysis}
-
-\subsection{Data preprocessing steps}
-
-\subsection{Integration of Prometheus}
-
-\subsection{Comparison of Public and Self-Generated Datasets}
+\section{Data Acquisition}
+\input{content/chapter/4_Data_Acquisition/4.1_Desription_Data_Sources}
+\input{content/chapter/4_Data_Acquisition/4.2_Integration_Prometheus}
 
 
 
 \pagebreak
 % ----------------------------------------------------------------------------------
-% Kapitel: Feature Selection 5
+% Kapitel: Exploratory Data Analysis 5
 % ----------------------------------------------------------------------------------
-\section{Feature Selection}
-
-\subsection{Rationale for Feature Selection Using Decision Trees}
-
-\subsection{Rationale for Feature Selection Based on Changes in Attack and Benign Data}
-
-\subsection{Process for Ranking and Selecting the Most Important Features}
+\section{Exploratory Data Analysis}
+\input{content/chapter/5_exploratory_data_analysis/5.1_Exploratory_data_analysis}
+\input{content/chapter/5_exploratory_data_analysis/5.2_Comparison_Public_Self_dataset}
 
 
 \pagebreak
 % ----------------------------------------------------------------------------------
-% Kapitel: Design Methodology and LSTM Implementation 5
+% Kapitel: Feature selection 5
 % ----------------------------------------------------------------------------------
-\section{Design Methodology and LSTM Implementation}
-
-\subsection{Building the LSTM Model Using Selected Features}
-
-\subsection{Model Training and Validation Steps}
-
-\subsection{Parameter Selection and Tuning}
+\include{content/chapter/6_Feature_Selection/6.1_data_preprocessing}
+\input{content/chapter/6_Feature_Selection/6.2_key_feature_selection}
+\input{content/chapter/6_Feature_Selection/6.3_feature_selection_decisiontree}
 
 
 \pagebreak
+% ----------------------------------------------------------------------------------
+% Kapitel: LSTM Architecutre 5
+% ----------------------------------------------------------------------------------
+\include{content/chapter/7_LSTM_Structure/7.1_Structure_and_Functionality}
+\input{content/chapter/7_LSTM_Structure/7.2_Training_and_validation}
+\input{content/chapter/7_LSTM_Structure/7.3_Parameter Configuration}
+
+\pagebreak
+
 % ----------------------------------------------------------------------------------
 % Kapitel: Analysis and Evaluation 5
 % ----------------------------------------------------------------------------------
-\section{Analysis and Evaluation}
+\include{content/chapter/8_Analysis_and_Evaluation/8.1_Experimental_Setup}
+\input{content/chapter/8_Analysis_and_Evaluation/8.2_Results_of_Anomaly_Detection}
+\input{content/chapter/8_Analysis_and_Evaluation/8.3_Visualization}
 
-\subsection{Experimental Setup and Evaluation Metrics}
-
-\subsection{Results of Anomaly Detection Using the Machine Learning Model}
-
-\subsection{Visualization and Interpretation of Detected Anomalies}
-
-
-\pagebreak
 % ----------------------------------------------------------------------------------
 % Kapitel: Discussion 2
 % ----------------------------------------------------------------------------------
@@ -195,85 +176,6 @@ https://arxiv.org/html/2401.01580v1 - Grafik von predicted und real values of ch
 % Kapitel: Future Work 2
 % ----------------------------------------------------------------------------------
 \section{Conclusion/Future Work}
-
-
-\pagebreak
-% ----------------------------------------------------------------------------------
-% Kleine Einführung in LaTeX-Elemente
-% ----------------------------------------------------------------------------------
-\section{\LaTeX-Elemente}
-Dieser Abschnitt becontentet lediglich einige Informationen über \LaTeX-Distributionen, Editoren und \LaTeX-Elemente, die Ihnen beim Einstieg in das \LaTeX-Textsatzsystem helfen sollen.
-
-
-\subsection{Bilder}
-Zum Einfügen eines Bildes, siehe Abbildung \ref{fig:reversi01}, werden die \texttt{minipage}-Umgebung und der Befehl \texttt{$\backslash$includegraphics} genutzt, da die Bilder so gut positioniert und einfach integriert und skaliert werden können.
-
-\vspace{1em}
-\begin{minipage}{\linewidth}
-	\centering
-	\includegraphics[width=0.5\linewidth]{pics/gamefield01.png}
-	\captionof{figure}[Spielfeld 01]{Unbespieltes Spielfeld\footnotemark}
-	\label{fig:reversi01}
-\end{minipage}
-\footnotetext{Diesem Spielfeld wurden noch keine Spieler zugewiesen (daher die dunklen Spielsteine)}
-
-Nachdem das Spielt gestartet wurde und beide Spielphasen durchlaufen wurden, siegt schließlich der Spieler mit der Farbe rot.
-
-\vspace{1em}
-\begin{minipage}{\linewidth}
-	\centering
-	\includegraphics[width=0.5\linewidth]{pics/gamefield02.png}
-	\captionof{figure}[Spielfeld 02]{Finales Spielfeld\footnotemark }
-	\label{fig:reversi2}
-\end{minipage}
-\footnotetext{Das Spielfeld nach der Zug- und Bombenphase. Spieler rot gewinnt eindeutig.}
-
-\subsection{Tabellen}
-In diesem Abschnitt wird eine Tabelle (siehe Tabelle \ref{tab:beispiel}) dargestellt.
-
-\vspace{1em}
-\begin{table}[!h]
-	\centering
-	\begin{tabular}{|l|l|l|}
-		\hline
-		\textbf{Name} & \textbf{Name} & \textbf{Name}\\
-		\hline
-		1 & 2 & 3\\
-		\hline
-		4 & 5 & 6\\
-		\hline
-		7 & 8 & 9\\
-		\hline
-	\end{tabular}
-	\caption{Beispieltabelle}
-	\label{tab:beispiel}
-\end{table}
-
-
-\subsection{Auflistung}
-Für Auflistungen wird die \texttt{enumerate}- oder \texttt{itemize}-Umgebung genutzt.
-
-\begin{itemize}
-	\item Nur
-	\item ein
-	\item Beispiel.
-\end{itemize}
-
-\subsection{Listings}
-Zuletzt sehen Sie in Listing \ref{lst:maxTeilsumZweiD} ein Beispiel für das Einbinden von Quellcode mit Syntax-Highlighting.
-
-\vspace{1em}
-\lstinputlisting[caption=Brute Force-Ansatz für das MaxTeilsum2D-Problem, label=lst:maxTeilsumZweiD,basicstyle=\ttfamily\scriptsize]{code/maxTeilsum2DBruteForce.txt}
-
-\subsection{Selbstgestaltete Abbildungen}
-Mithilfe des Paketes \texttt{tikz} können sehr schöne Abbildungen (z.\,B.\ Automaten, Graphen etc.) direkt in \LaTeX generiert werden. Viele Beispiele dazu finden Sie auf folgender Webseite:\\[1em]
-\hspace*{3cm}\url{http://www.texample.net/tikz/}.
-
-\subsection{Tipps}
-Die Literaturreferenzen (Bücher, Paper und Journals) und Internetquellen (Webseiten, Blogs etc.) befinden sich in der Datei \textit{literatur.bib}. Eine Buch- und eine Online-Quelle sind beispielhaft eingefügt. [Vgl.\ \cite{buch}, \cite{mathcomm}]
-
-Literatur und Quellen werden in zwei getrennte Verzeichnisse aufgeteilt. Als Unterscheidungsmerkmal dient bei den Quellen der Zusatz: \texttt{keywords = \{online\}}.
-
 \pagebreak
 
 % ----------------------------------------------------------------------------------------------------------
@@ -297,26 +199,21 @@ Literatur und Quellen werden in zwei getrennte Verzeichnisse aufgeteilt. Als Unt
 
 \pagebreak
 
-
-% ---------------------------------------------------------------------------------------------------------- 
-% Quellen 
-% ---------------------------------------------------------------------------------------------------------- 
-\lhead{} 
-\rhead{Quellenverzeichnis} 
-
-\printbibliography[title = {Quellenverzeichnis}, heading=Quellen,filter=Quellen] 
-
-\pagebreak 
-
 % ----------------------------------------------------------------------------------------------------------
 % Anhang
 % ----------------------------------------------------------------------------------------------------------
+
 \pagenumbering{Roman}
 \setcounter{page}{1}
 \lhead{Anhang \thesection}
 
 \appendix
 \section*{Anhang}
+
+\label{app:perf_script}
+\input{content/chapter/listing/code}
+
+
 \phantomsection
 \addcontentsline{toc}{section}{Anhang}
 \addtocontents{toc}{\vspace{-0.5em}}

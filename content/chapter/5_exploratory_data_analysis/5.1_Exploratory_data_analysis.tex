@@ -1,2 +1,97 @@
-\section{Exploratory Data Analysis}
 \subsection{Exploratory Data Analysis in the Context of EVSE Anomaly Detection}
+So far, we have provided an overview of the relevance and challenges involved in securing EVSE environments. We discussed the fundamental knowledge required before developing an anomaly detection system, gained insight into related work in this area, and explored how it can inform our own approach.\\
+We have also examined how data can be acquired from EVSE environments and how \texttt{Prometheus} can be used to collect and store this data.\\
+All of these sections and subsections are essential for understanding the context of our work and for showing how it is possible to develop an anomaly detection system for EVSE environments based on the analysis of hardware events and the collected data.\\
+In this section, we focus on the Exploratory Data Analysis (EDA) of the collected data. EDA is a crucial step in understanding the data, identifying patterns, and preparing for further analysis or modeling. We use Python and its data analysis libraries within a Jupyter Notebook environment to visualize and explore the collected data.
+
+%Ziele Fragestellung warum EDA wichtig ist
+This chapter is of particular importance because it defines the quality of the results in the following chapters and significantly influences how well anomaly detection using machine learning models will perform and how quickly they will learn. Therefore, we need to answer the following questions:
+\begin{itemize}
+    \item Can we observe meaningful distributions in the features over time and in relation to attacks?
+    \item Can we identify and define the most important features?
+    \item Is there any noise in the data, and how significant is it?
+    \item How strong are the correlations between the different features?
+\end{itemize}
+Answering these questions through Exploratory Data Analysis (EDA) provides a foundation for effective feature selection and model performance \cite{google2024EDAFeatureSelection}.
+
+% Pandas
+To convert the data into more useful formats, I used \textbf{Pandas}, a fast, powerful, and easy-to-use open-source data analysis tool for Python. It provides expressive data structures such as DataFrame and Series for working with structured and time series data.\\
+I primarily used Pandas to convert my data, which was originally stored in \texttt{.csv} files, into \texttt{.parquet} files. Additionally, I used it to manipulate the dataframes by dropping cells, adding information such as "Attack" or "Benign" tags to almost 7000 rows. This preprocessing step was essential to clean the data before applying machine learning algorithms.\\
+Some other useful key features of Pandas include:
+\begin{itemize}
+    \item Tools for reading and writing data between various formats
+    \item Flexible reshaping and merging of data
+    \item Powerful grouping, aggregation, and transformation operations
+\end{itemize}
+\cite{pandas_wiki}
+\\
+% Matplotlib
+To create diagrams that help me better understand the data, I used a popular plotting library in Python called \textbf{Matplotlib}. Specifically, I used the \texttt{matplotlib.pyplot} module, which is a state-based interface to the Matplotlib library and provides a MATLAB-like way of creating static, animated, and interactive visualizations in Python.\\
+Matplotlib is well-suited for quickly prototyping visualizations thanks to its simple and readable syntax. This allowed me to create a wide range of plots, including:
+\begin{itemize}
+    \item \textbf{Line Plots:} Display data points connected by straight lines, useful for visualizing trends over time \cite{geek_lineplot}.
+    \item \textbf{Scatter Plots:} Present individual data points as dots in a two-dimensional space, commonly used to show correlations between variables \cite{geek_scatter}.
+    \item \textbf{Bar Charts:} Use rectangular bars with variable lengths to represent values, making it easy to compare quantities across different categories \cite{geek_bar}.
+    \item \textbf{Histograms:} Divide continuous data into bins and show the frequency or count of data points within each bin \cite{geek_histogram}.
+    \item \textbf{Heatmaps:} Visualize the relationship between multiple variables in a matrix format using color gradients \cite{geek_heatmap}.
+\end{itemize}
+These visualizations enabled me to better understand the data structure, identify patterns, and prepare the dataset for further processing.
+\\
+% Seaborn
+I also used the Seaborn libary it is like the other 2 libaries also an open-source Python libary. It is exspecially know for making statistical graphiscs butilt on top of the matplot lib. Seaborn proves high-level interface for plotting informatikve and statitical plots. It is also closely integrates with Pandas data structure what allows easy visualitzion of whole datasets and enables
+- Plotting of complex relationships
+- aumtomtac aggregation and statistical estimation (Means, confidence intervals, etc)
+- Thematic styling and enhanced color palettes. 
+Therefore it was for me a perfect additon to the pandas and Mathplot libaries.
+\cite{seaborn_wiki}
+
+In addition to Matplotlib and Pandas, I also used the open-source Python library \textbf{Seaborn}. Seaborn is especially known for creating statistical graphics and is built on top of the Matplotlib library. It provides a high-level interface for drawing informative and attractive statistical plots.\\
+Seaborn is closely integrated with Pandas data structures, which makes it easy to visualize entire datasets. This integration enabled me to create complex visualizations with minimal code. Key features of Seaborn include:
+\begin{itemize}
+    \item Plotting of complex relationships between multiple variables
+    \item Automatic aggregation and statistical estimation (e.g., means, confidence intervals)
+    \item Thematic styling and enhanced color palettes for better aesthetics
+\end{itemize}
+For these reasons, Seaborn was a perfect addition to the Pandas and Matplotlib libraries in my data analysis workflow.
+\cite{seaborn_wiki}
+
+
+% % ersten erkenntnisse aus der Analyse
+Before I startet with my own Feature selection I took a closer look at the selected HPC and Kernel features from the paper: Enhancing EV Charging Station Security Using A Multi-dimensional Dataset : CICEVSE2024 \cite{EV_Security}.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/selected_features_paper.png}
+  \caption{Selected HPC and Kernel Features from \cite{EV_Security}}
+  \label{fig:selected_features_paper}
+\end{figure}
+
+% identifizerunte Muster und Trends
+If we took at the timeline of the selected features we can already see some interesting patterns and trends especially for the (icmp-, tcp-, synonymous-) flooding attacks. 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/cache-misses.png}
+  \caption{cache-misses timeline}
+  \label{fig:cache-misses}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/exc_taken.png}
+  \caption{exc-taken timeline}
+  \label{fig:exc_taken}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/instructions.png}
+  \caption{instructions timeline}
+  \label{fig:instructions}
+\end{figure}
+
+Interestingly, the ICMP flood generates significantly more traffic across almost all measured features, such as \textit{cache misses}, \textit{exceptions taken}, and \textit{instructions executed}. The ICMP flood attack is a type of Denial-of-Service (DoS) attack that overwhelms a target system with ICMP Echo Request packets, causing it to become unresponsive.
+
+When compared to other attacks such as the TCP flood or the SYN flood, the ICMP flood almost doubles the observed values in several performance metrics. This can be explained by the fact that every single ICMP Echo Request must be fully processed and answered by the target system. As a result, this leads to increased memory accesses outside of the CPU caches, as well as more frequent interrupts within the kernel.
+
+The paper \textit{"An Experimental Detection of Distributed Denial of Service Attack in CDX 3 Platform Based on Snort"} also explains that the ICMP flood sends a significantly higher number of Echo Request packets, each of which requires an immediate response from the target system—unlike the TCP flood or SYN flood, which primarily rely on connection queues and do not necessarily require an immediate, full response.
+
+%https://pmc.ncbi.nlm.nih.gov/articles/PMC10346265/
+
+% Herausforderunegen bei der Datenmenge sehr viele feature

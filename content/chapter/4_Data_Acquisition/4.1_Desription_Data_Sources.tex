@@ -1,2 +1,55 @@
-\section{Data Acquistion}
-\subsection{Description of Data Sources for EVSE Anomaly Detection}
+\subsection{Data Sources for EVSE Anomaly Detection}
+
+In line with the approach described in the paper \cite{EV_Security} \textit{Enhancing EV Charging Station Security Using A Multi-dimensional Dataset : CICEVSE2024}, I recorded Hardware Counter Performance (HCP) kernel events and tracepoint events to classify anomalies in Electric Vehicle Supply Equipment (EVSE) data. For efficient monitoring, I also utilized the \texttt{perf} tool, a robust Linux performance analysis utility capable of capturing a variety of performance data, including hardware events, software events, and tracepoints \cite{perf_wiki}. This tool offers flexible and effective monitoring of system performance and is instrumental in diagnosing issues efficiently.\\
+\\
+To perform the data acquisition on a Raspberry Pi Zero W, I used the \texttt{perf\_exporter}\cite{perf_exporter} to record up to 900 Tracepoint-events, which were selected based on the CICEVSE2024 dataset. Initially, I developed a Python script to capture kernel and HCP events. However, when expanding to about 110 events, my developed script's runtime increased to approximately 9 seconds, which proved insufficient for real-time analysis. Consequently, I investigated the internal workings of the \texttt{perf} tool to understand how it manages specialized events and optimizes recording.\\
+\\
+As detailed in \textit{Linux perf event Features and Overhead}\cite{perf_event_overhead}, \texttt{perf} supports multiplexing, allowing the measurement of more events than there are available hardware counters—albeit at the cost of accuracy loss and increased system overhead. Recent updates can result in resource usage exceeding 20\%, compared to approximately 2\% in older tool versions. To minimize these inaccuracies, I grouped events per CPU, exploiting up to 8 available counter registers and limiting each group to a maximum of 6 events. \\
+\\
+For the monitoring interval, I followed recommendations from the literature\cite{perf_event_multiplexing}, which addresses multiplexing and accuracy trade-offs. The suggested minimum monitoring interval is around 10 ms for reliable results. Balancing the number of counter registers and striving for good measurement accuracy, I configured groups of 6 hardware events per group, with a monitoring interval of 0.1 seconds. This configuration yielded data with sufficient accuracy to detect anomalies in the EVSE dataset.\\
+\\
+To further optimize efficiency and accuracy, I transitioned to developing the data acquisition script in Go. The Go programming language offers low-level hardware access and, with available libraries, integrates more seamlessly with the \texttt{perf} tool compared to Python.\\
+Additionally, the script exports all monitored hardware events from \texttt{perf} into a Prometheus database, enabling centralized and convenient access to all collected data. This setup streamlines subsequent analysis, visualization, and anomaly detection activities.\\
+The script is provided in the following section.\\
+\\
+Here you can find two functions of the script the first one is used to format the data for Prometheus and the second one is used to monitor the data with the \texttt{perf} tool. The whole script you can find in the appendix \ref{app:perf_script}.
+\\
+\begin{lstlisting}[caption={Go script for performance monitoring via perf for Prometheus}, label={lst:perf-prometheus-exporter}]
+// formatForPrometheus converts the filtered performance data into Prometheus-compatible metrics format.
+func formatForPrometheus(data string) string {
+	lines := strings.Split(data, "\n")
+	var result []string
+	for _, line := range lines {
+		parts := strings.Fields(line)
+		if len(parts) >= 2 {
+			// Clean up the metric name
+			metricName := strings.ReplaceAll(parts[1], ".", "_")
+			// metricName = strings.ReplaceAll(metricName, "-", "_")
+			// Remove decimal points from the number and parse it
+			metricValue := strings.ReplaceAll(parts[0], ".", "")
+			if value, err := strconv.ParseFloat(metricValue, 64); err == nil {
+				// Format value appropriately for Prometheus (integer or float)
+				if value == float64(int(value)) {
+					result = append(result, fmt.Sprintf("%s %d", metricName, int(value)))
+				} else {
+					result = append(result, fmt.Sprintf("%s %f", metricName, value))
+				}
+			}
+		}
+	}
+	return strings.Join(result, "\n")
+}
+
+// getPerfData runs `perf stat` with the specified events for a short duration (0.1s)
+// and returns the raw output as a string.
+func getPerfData(events []string) (string, error) {
+	eventList := strings.Join(events, ",")
+	cmd := exec.Command("perf", "stat", "-e", eventList, "--", "sleep", "0.1")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", err
+	}
+	return string(output), nil
+}
+\end{lstlisting}
+
