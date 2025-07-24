@@ -65,7 +65,7 @@ Before I startet with my own Feature selection I took a closer look at the selec
   \label{fig:selected_features_paper}
 \end{figure}
 
-% identifizerunte Muster und Trends
+
 If we took at the timeline of the selected features we can already see some interesting patterns and trends especially for the (icmp-, tcp-, synonymous-) flooding attacks. 
 \begin{figure}[H]
   \centering
@@ -73,25 +73,50 @@ If we took at the timeline of the selected features we can already see some inte
   \caption{cache-misses timeline}
   \label{fig:cache-misses}
 \end{figure}
+\textit{Cache-misses} Monitors the number of times a data request is not found in the last level cache (LLC)\cite{perf_perf}.
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/exc_taken.png}
   \caption{exc-taken timeline}
   \label{fig:exc_taken}
 \end{figure}
+\textit{exc-taken} Tracks the number of exceptions taken by the processor, like interrrupts or faults \cite{arm_developer_perf}.
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/instructions.png}
   \caption{instructions timeline}
   \label{fig:instructions}
 \end{figure}
+\textit{instructions} Counts the total number of instructions that have been completely executed by the processor \cite{Linux_perf}.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/l1d_cache_wr.png}
+  \caption{l1d cache wr timeline}
+  \label{fig:l1d_cache_wr}
+\end{figure}
+\textit{L1d cache wr} Counts every data load, store, or pagewalk that fetches data from ouside the L1 data cache \cite{arm_developer_pmu_perf}.
+\\
+Interestingly, the ICMP flood generates significantly more traffic across almost all measured features, such as \textit{cache misses}, \textit{exceptions taken}, \textit{instructions executed}, and \textit{L1-icache-loads}. The ICMP flood attack is a type of Denial-of-Service (DoS) attack that overwhelms a target system with ICMP Echo Request packets, causing it to become unresponsive.\\
+When compared to other attacks such as the TCP flood or the SYN flood, the ICMP flood almost doubles the observed values in several performance metrics. This can be explained by the fact that every single ICMP Echo Request must be fully processed and answered by the target system. As a result, this leads to increased memory accesses outside of the CPU caches, as well as more frequent interrupts within the kernel.\\
+The paper \textit{"An Experimental Detection of Distributed Denial of Service Attack in CDX 3 Platform Based on Snort"}\cite{ICMP_Flood} also explains that the ICMP flood sends a significantly higher number of Echo Request packets, each of which requires an immediate response from the target system—unlike the TCP flood or SYN flood, which primarily rely on connection queues and do not necessarily require an immediate, full response.
 
-Interestingly, the ICMP flood generates significantly more traffic across almost all measured features, such as \textit{cache misses}, \textit{exceptions taken}, and \textit{instructions executed}. The ICMP flood attack is a type of Denial-of-Service (DoS) attack that overwhelms a target system with ICMP Echo Request packets, causing it to become unresponsive.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/kmem_kfree.png}
+  \caption{kmem kfree timeline}
+  \label{fig:kmem_kfree}
+\end{figure}
+\textit{kmem kfree} monitors memory free events, specifically tracking when kernel memory objects are released or freed~\cite{kernel_kmem_events_perf}.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/raw_syscalls_sys_enter.png}
+  \caption{raw syscalls sys enter timeline}
+  \label{fig:raw_syscalls_sys_enter}
+\end{figure}
+\textit{raw syscalls sys enter} captures system call entry (raw) events~\cite{EV_Security}.
+\\
+\\
+In these graphics, we can observe that \textit{kmem kfree} shows a clearly recognizable increase during ICMP, SYN, and TCP flooding attacks. This makes it a useful and distinguishable feature for detecting such attacks in the later algorithm.\\
+In contrast, the \textit{raw\_syscalls\_sys\_enter} feature exhibits a continuous increase regardless of whether the charging station is under attack or not. This behavior renders it unpredictable in the context of my data and, therefore, not a suitable candidate for the detection algorithm later.
 
-When compared to other attacks such as the TCP flood or the SYN flood, the ICMP flood almost doubles the observed values in several performance metrics. This can be explained by the fact that every single ICMP Echo Request must be fully processed and answered by the target system. As a result, this leads to increased memory accesses outside of the CPU caches, as well as more frequent interrupts within the kernel.
-
-The paper \textit{"An Experimental Detection of Distributed Denial of Service Attack in CDX 3 Platform Based on Snort"} also explains that the ICMP flood sends a significantly higher number of Echo Request packets, each of which requires an immediate response from the target system—unlike the TCP flood or SYN flood, which primarily rely on connection queues and do not necessarily require an immediate, full response.
-
-%https://pmc.ncbi.nlm.nih.gov/articles/PMC10346265/
-
-% Herausforderunegen bei der Datenmenge sehr viele feature
+This are just few features of more than 900 features that the paper \textit{Enhancing EV Charging Station Security Using A Multi-dimensional Dataset} \cite{EV_Security} and my own analysis monitored. Later we take a closer look how I selected the most important features for my anomaly detection algorithm.\\
