@@ -1,10 +1,104 @@
-\subsection{Data Preprocessing steps}
-As already mentioned for the  \texttt{CICEVSE2024} dataset it was just need to remove the four rows of NaN data to have correct useable data for the first step.\\
-For the gerenated dataset from our environment I needed at first do have as much as possbile data in the benign status thereforce I made an Prometheus PromQL request to get the monitored data from the night where the environment was not used for other test. The script for this query you can find at listing4.\\
-Than I started with the attacks to monitor the behavior from the hcp and kernel events in our environment if it is under attack. You can find this script under listening5\\
+\subsection{Data Preprocessing Steps}
 
-%dann attack namen eingefügt
+As already mentioned, for the \texttt{CICEVSE2024} dataset, it was only necessary to remove four rows containing \texttt{NaN} values to obtain clean and usable data for the initial processing step.\\
+For the generated dataset from our environment, I first aimed to include as much benign-status data as possible. Therefore, I made a Prometheus PromQL request to retrieve monitoring data from a night when the environment was not used for other tests. The complete script for this query can be found in Listing~\ref{listing4}.
 
-%alle skripte einen kurzen ausschnitt noch erklären
+\begin{lstlisting}[caption={Python script that defines the timesteps and time range for data scraping and performs the request from the \texttt{prometheus\_URL}}, label={lst:python_attack_script}]
 
-%dann kann ich mit key feature selection starten
+    PROMETHEUS_URL = "http://192.168.1.25:9090"
+    STEP = "10"  # seconds
+    CHUNK_HOURS = 2
+
+    start_time = datetime.fromisoformat("2025-07-22T18:00:00.000000")
+    end_time = datetime.fromisoformat("2025-07-23T14:40:00.000000")
+
+    def main():
+    chunks = build_chunks(start_time, end_time, CHUNK_HOURS)
+    data = defaultdict(dict)
+    timestamps = set()
+    values_dict = {}
+    metric_query_map = {}
+
+    for feat in FEATURES:
+        prom_name = feat.replace("-", "_")
+        url = f"{PROMETHEUS_URL}/api/v1/query"
+        hit = False
+
+        # 1. sum(prom_name) abfragen
+        query = f"sum({prom_name})"
+        params = {'query': query}
+        try:
+            resp = requests.get(url, params=params)
+            resp.raise_for_status()
+            results = resp.json()['data']['result']
+            if results:
+                value = float(results[0]['value'][1])
+                values_dict[feat] = value
+                metric_query_map[feat] = query
+                hit = True
+        except Exception:
+            pass
+\end{lstlisting}
+
+Then, I initiated the attacks to monitor the behavior of the HCP and kernel events in our environment under attack conditions. The complete script can be found in Listing~\ref{listing5}.\\
+\begin{lstlisting}[caption={Python script that executes the commands during the defined period and logs the timestamps of the different attacks}, label={lst:python_attack_script}]
+    commands = [
+    ("Slowloris", ["python3", "slowloris.py", "192.168.1.25", "-s", "500"]),
+    ("UDP Flood", ["sudo", "hping3", "--flood", "--udp", "-p", "80", "192.168.1.25"]),
+    ("ICMP Flood", ["sudo", "hping3", "--flood", "-1", "192.168.1.25"]),
+    ("TCP Flood", ["sudo", "hping3", "--flood", "-p", "80", "192.168.1.25"]),
+    ("Synonymous Flood", ["sudo", "hping3", "--flood", "--rand-source", "-p", "80", "192.168.1.25"]),
+    ("Portscan", ["bash", "-c", "for i in {1..1000}; do sudo nmap -sT 192.168.1.25; sleep 1; done"]),
+    ("OS Fingerprinting", ["bash", "-c", "for i in {1..1000}; do sudo nmap -O 192.168.1.25; sleep 1; done"]),
+    ("Aggressive Scan", ["bash", "-c", "for i in {1..1000}; do sudo nmap -A 192.168.1.25; sleep 1; done"]),
+    ]   
+
+    def log_msg(msg):
+    with open(LOG_FILE, "a") as f:
+        f.write(msg + "\n")
+
+    while True:
+        for name, cmd in commands:
+            start_time = datetime.now()
+            print(f"Starte {name}: {' '.join(cmd)}")
+            log_msg(f"Start: {start_time.strftime('%Y-%m-%d %H:%M:%S')} - Angriff: {name} - Befehl: {' '.join(cmd)}")
+            try:
+                proc = subprocess.Popen(cmd)
+                proc.wait(timeout=RUN_TIME)
+                note = "Erfolgreich beendet"
+            except subprocess.TimeoutExpired:
+                proc.terminate()
+\end{lstlisting}
+
+With the generated log file, it was possible to insert the different attacks with the correct time periods into the \texttt{dataset.csv} file for use in training the machine learning models and do a correct data analysis.
+
+\begin{lstlisting}[caption={Command to insert the attack labels into the dataset using the Python library \texttt{pandas}}]
+    # alle angaben sind schon auf kleinschreibung und das richtige format angepasst
+    intervals = [
+    ("2025-07-23T06:52:35.000", "2025-07-23T07:07:35.000", "slowloris"),
+    ("2025-07-23T07:27:35.000", "2025-07-23T07:42:35.000", "udpflood"),
+    ("2025-07-23T08:25:45.000", "2025-07-23T08:47:50.000", "icmpflood"),
+    ("2025-07-23T08:50:49.000", "2025-07-23T09:05:49.000", "tcpflood"),
+    ("2025-07-23T09:05:49.000", "2025-07-23T09:08:49.000", "synonymousflood"),
+    ("2025-07-23T09:10:44.000", "2025-07-23T09:20:44.000", "portscan"),
+    ("2025-07-23T09:35:44.000", "2025-07-23T09:45:44.000", "synonymousflood"),
+    ("2025-07-23T10:00:44.000", "2025-07-23T10:10:44.000", "osfingerprinting"),
+    ("2025-07-23T10:25:44.000", "2025-07-23T10:35:44.000", "aggressivescan"),
+    ("2025-07-23T10:50:44.000", "2025-07-23T11:00:44.000", "slowloris"),
+    ("2025-07-23T11:10:21.000", "2025-07-23T11:18:21.000", "udpflood"),
+    ("2025-07-23T11:28:21.000", "2025-07-23T11:36:21.000", "icmpflood"),
+    ("2025-07-23T11:46:21.000", "2025-07-23T11:54:21.000", "tcpflood"),
+    ("2025-07-23T12:08:55.000", "2025-07-23T12:12:21.000", "portscan"),
+    ("2025-07-23T12:22:21.000", "2025-07-23T12:30:21.000", "synonymousflood"),
+]
+
+for start, end, value in intervals:
+    maske = (df["timestamp"] >= start) & (df["timestamp"] <= end)
+    df.loc[maske, "attack"] = value
+    df.loc[maske, "Label"] = "attack"
+\end{lstlisting}
+
+With these preprocessing steps, a meaningful exploratory data analysis was possible, allowing us to proceed with key feature selection to train the machine learning models for optimal results. This step is essential, as most models do not perform well with 900 or more features. This is also demonstrated in \cite{EV_Security}, where the best results were achieved using only 11 to 20 key features. \\
+Furthermore, using too many features would lead to performance issues on the Raspberry Pi in the live system, as it would need to query and process values for up to 900 features every 5 to 60 seconds.
+
+% Bild einfügen welches das beweißt das ich performance probleme bekomme wenn ich 900 features abfrage
