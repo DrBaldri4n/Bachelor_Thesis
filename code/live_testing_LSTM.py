@@ -5,7 +5,7 @@ from datetime import datetime
 from prometheus_api_client import PrometheusConnect, MetricSnapshotDataFrame
 from tensorflow.keras.models import load_model
 import joblib
-from config_feature import FEATURES
+from config_feature_test import FEATURES
 
 
 # --- Initialisierung ---

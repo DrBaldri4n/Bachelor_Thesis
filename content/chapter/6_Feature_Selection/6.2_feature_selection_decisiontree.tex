@@ -1,7 +1,98 @@
 \subsection{Feature Selection Using Decision Trees}
 
-% paper was mir beweist das es smart ist über Decision Tree die feature selection zu machen.
+Feature selection is a crucial aspect in the preparation of modern deep learning algorithms. However, identifying the most effective method that also performs well in a live environment—such as an EVSE system with limited hardware resources—remains a challenge.\\
+The paper *"Enhancing EV Charging Station Security Using a Multi-dimensional Dataset"~\cite{EV_Security}* employed Principal Component Analysis (PCA) to reduce 900 input features for use in an LSTM model. We also experimented with PCA, but due to the nature of this method, all 900 original features must still be requested in the live environment in order to compute the transformed principal components. Executing the required PromQL queries for all 900 features caused the CPU usage on our Raspberry Pi setup to average nearly 50 \%, which makes this approach unsuitable for real-time deployment.\\
+Following this limitation, we were compelled to explore alternative feature selection techniques that could offer high performance without requiring access to the full feature set. The paper *"Comparative Analysis of Feature Selection Techniques for LSTM-Based Network Intrusion Detection Models"~\cite{feature_selection}* evaluated multiple feature selection strategies to determine the most effective combinations for LSTM-based algorithms.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{pics/feature_selection_comparison.png}
+    \caption{Comparison of feature selection methods for LSTM accuracy \cite{feature_selection}.}
+    \label{fig:feature_selection_comparison}
+\end{figure}
+According to their findings, the LSTM model without any feature selection achieved the highest accuracy at 85 \%. However, as previously mentioned, using all 900 features is not feasible in our hardware-constrained environment. The next best accuracies were achieved using LSTM combined with either the Select Best Feature Seleciton method or Tree-Based feature selection, with only a 1 \% accuracy drop and an F1-score difference of just 0.014.\\
+Given this background, we decided to adopt the Decision Tree algorithm for feature selection. This allows us to identify the most relevant features while maintaining a high level of accuracy, and keeping resource usage within our system s constraints.
 
-% meinen aufbau des Decision Tree erklären und zeigen.
+% Explanation of the Decision Tree setup for feature selection
+With this information, I created a Decision Tree to select the most relevant features for real-time detection in our EVSE system. I used the \texttt{DecisionTreeClassifier} from the \texttt{sklearn.tree} module, which is easy to use and integrates well with common data science workflows.\\ (muss ich das begürnden?)
 
-% graffiken von Feature auswahl (Konvusion matrix, korrelations matrix, importancy der Feautre)
+In the following script, you can see how I trained our preprocessed dataset using binary labels (benign = 0, attack = 1). To prevent data leakage, I dropped the columns \texttt{'Label'}, \texttt{'timestamp'}, and \texttt{'attack'} before training.\\
+\begin{lstlisting}[caption={Training a Decision Tree Classifier for feature selection using a binary-labeled dataset}, label={lst:decision_tree_feature_selection}]
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+
+# Load preprocessed custom dataset
+df = pd.read_parquet('preprocessed_custom_data.parquet')
+
+# Convert categorical labels to binary format: benign = 0, attack = 1
+df['Label'] = df['Label'].replace({'benign': 0, 'attack': 1})
+
+# Define features (X) and target variable (y)
+# Drop metadata and redundant columns
+X = df.drop(columns=['Label', 'timestamp', 'attack'])
+y = df['Label']
+
+# Initialize and train a Decision Tree classifier for feature selection
+clf = DecisionTreeClassifier(random_state=42)
+clf.fit(X, y)
+\end{lstlisting}
+
+This approach allowed us to significantly reduce the number of input features while preserving high detection accuracy and runtime performance.
+
+% Visualizations for feature selection (Confusion Matrix, Correlation Matrix, Feature Importance)
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{pics/feature_importance.png}
+    \caption{Top 10 most important features selected by the Decision Tree.}
+    \label{fig:feature_importance}
+\end{figure}
+
+Using the 20 most important features identified by the Decision Tree, I created a correlation matrix to examine feature redundancy.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{pics/corrlationMatrix_DT_firstrun.png}
+    \caption{Correlation matrix after the first Decision Tree run.}
+    \label{fig:corrlationMatrix_DT_firstrun}
+\end{figure}
+
+However, a closer look at the correlation matrix reveals that many of these features are highly correlated with one another, reducing their individual significance in model training.\\
+To increase the diversity of the selected features and avoid redundancy, I removed highly correlated features (correlation coefficient $>$ 0.99). When two features were strongly correlated, I retained only the one with the higher importance score.\\
+
+\begin{lstlisting}[caption={Dropping highly correlated features based on importance scores}, label={lst:high_correlation_feature_dropping}]
+# Remove strongly correlated features (>0.99),
+# keeping the one with higher importance
+
+# X: DataFrame containing feature columns
+# importances: Pandas Series with feature names as index
+
+# Compute absolute correlation matrix
+corr_matrix = X.corr().abs()
+# Extract upper triangle (excluding diagonal)
+upper_tri = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
+
+to_drop = set()
+
+# Iterate over features
+for col in upper_tri.columns:
+    high_corr_feats = upper_tri.index[upper_tri[col] > 0.99].tolist()
+    for feat in high_corr_feats:
+        # Drop the feature with lower importance
+        if importances[feat] < importances[col]:
+            to_drop.add(feat)
+        else:
+            to_drop.add(col)
+
+# Drop selected features
+X_reduced = X.drop(columns=to_drop)
+\end{lstlisting}
+
+After this filtering step, I retrained the Decision Tree using the reduced feature set. The resulting top features were more diverse and better distributed, providing a more robust foundation for training the LSTM model in the next stage.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{pics/corrlationMatrix_DT_secondrun.png}
+    \caption{Top 20 most important features selected by the Decision Tree after dropping high correalted features.}
+    \label{fig:feature_importance}
+\end{figure}
+
+If we take a look at the timeline and changes from the new selected features we can observe that not just flooding attacks should be detect sondern auch port scans what gaves us the possbility das wir breiter aufgestellt sind.
