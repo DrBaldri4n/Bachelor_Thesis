@@ -1,10 +1,63 @@
 \subsection{LSTM Architecture and Preprocessing}
 
-We already got a good understanding of the Structure and the Fundamentals of the LSTM in the Chapter 2\_Fundamentals, in this chapter I want to get deeper in the Functionaly of the LSTM Architerurce and how the Time-step data analysis is so importent in the kontext of this work. \\
-The time step analysis is a big advantage in this case because the moste attacks are over an loger time and and and\dots
+A foundational understanding of the structure and principles of Long Short-Term Memory (LSTM) networks has already been provided in Chapter~2\_Fundamentals. In this section, I will delve deeper into the specific architecture of the LSTM used in this work and highlight the importance of time-step-based data analysis in this context.\\
+Time-step analysis offers a major advantage of LSTMs over other deep neural network (DNN) models, particularly in the detection of cyber attacks or anomalies. Most such events do not occur abruptly. Instead, they often emerge gradually over time \cite{attack_over_time}. LSTM networks are specifically designed to recognize temporal patterns and sequential dependencies, making them especially well-suited for identifying these slow-developing behaviors.\\
+\\
+In order to detect time-dependent attacks effectively, the training data must be well-organized so that the models can learn time-relevant patterns—both during training and later in the live system. Therefore, the preprocessing steps used to split the data into training and test sets must be carefully structured and should not be randomized.\\
+At this stage, the data has generally already been cleaned, as described in Chapter~6\_Feature~Selection.\\
+In my case, I split the dataset into 10 chronological blocks. Within each block, the data is sorted by time steps. Then I combined 7 of these blocks to the training dataset and used the remaining 3 for the test dataset. I ensured that both sets had approximately the same distribution of the labels \texttt{benign} and \texttt{attack}, to prevent class imbalance.\\
+The following listing shows the exact implementation of the data-splitting and label distribution verification process:
 
 
-% preprocessing of train and test data
-Preprocessing of the data it is important to keep the timesteps in the original form as good as possible therefore we can not just randomise and split the data in train and test data we need more steps in the preocodure..
+\begin{lstlisting}[language=Python, caption={Block-wise time-ordered split of the dataset for training and testing, including class distribution balancing}, label={lst:time_split_balancing}]
 
-explain the skripts from preprocessing
+import pandas as pd
+
+# Load the preprocessed dataset
+df = pd.read_parquet('preprocessed_custom_data.parquet')
+
+# Split the dataset into 10 time-ordered blocks
+block_size = len(df) // 10
+blocks = [df.iloc[i * block_size:(i + 1) * block_size] for i in range(9)]
+blocks.append(df.iloc[9 * block_size:])  # Last block takes the remaining data
+
+# Print class distribution in each block
+label_counts = [block['Label'].value_counts() for block in blocks]
+for i, counts in enumerate(label_counts):
+    print(f'Block {i + 1}:', dict(counts))
+
+# Use blocks 2, 5, and 8 as test data, the rest as training data
+test_blocks = [blocks[1], blocks[4], blocks[8]]
+train_blocks = [block for i, block in enumerate(blocks) if i not in [1, 4, 8]]
+
+# Concatenate the blocks to form final datasets
+test_df = pd.concat(test_blocks).reset_index(drop=True)
+train_df = pd.concat(train_blocks).reset_index(drop=True)
+
+# Save the resulting datasets as Parquet files
+test_df.to_parquet('test_block.parquet')
+train_df.to_parquet('train_block.parquet')
+
+# Reload saved Parquet files (for verification or further use)
+train_df = pd.read_parquet('train_block.parquet')
+test_df = pd.read_parquet('test_block.parquet')
+
+# Function to compute label distribution percentages
+def label_percentages(df):
+    return (df['Label'].value_counts(normalize=True) * 100).round(2)
+
+# Display label distribution
+print("Train Set:")
+print(label_percentages(train_df))
+
+print("\nTest Set:")
+print(label_percentages(test_df))
+
+\end{lstlisting}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{pics/split_train_test_dataset.png}
+    \caption{Balanced label distribution between the training and test datasets.}
+    \label{fig:split_train_test_dataset}
+\end{figure}

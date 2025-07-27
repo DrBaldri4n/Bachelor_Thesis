@@ -1,9 +1,128 @@
 \subsection{Parameter Configuration and Hyperparameter Optimization}
-the LSTM architecture it self explain why i design it like that:
+In this Chapter we take a closer look at the choosen structure from the LSTM architecture and explain it.\\
 
-- LSTM layers why 2?
-- Learning Rate,
-- Batch Size
-- Sequnce Lenght
-- Los function MSE or Adam 
-- Early Stopping 
+\begin{lstlisting}[language=Python, caption={Loading training and test datasets, and preparing feature and label configuration}, label={lst:load_data_features}]
+from config_feature_test import FEATURES, LABEL
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+
+# Load training and test datasets
+train_df = pd.read_parquet('train_block.parquet')
+test_df = pd.read_parquet('test_block.parquet')
+\end{lstlisting}
+
+In the text code listing we label the data in the dataset and scale it from 0 to 1 this is espacially in the LSTM model important because the unscaled data can not be readed well from the model.
+
+In the code listing~\ref{lst:preprocessing_scaling}, we label the data by converting the class labels from strings (``benign'', ``attack'') into binary values (0 and 1), and we scale all feature values using the \texttt{StandardScaler}. This scaling step is crucial for training an LSTM model effectively.\\
+Unscaled data can lead to numerical instability and poor convergence in neural networks. LSTMs are particularly sensitive to the scale of input features, because they use sigmoid (explained later in detail) activation functions, which operate best when input values are within a small, centered range—typically between -1 and 1. If the features have very different magnitudes, such as bytes transmitted (e.g. in thousands) versus CPU usage (e.g. in fractions), the model may focus disproportionately on features with larger numeric ranges, leading to biased learning and suboptimal performance \cite{input_scaling_important}.\\
+By standardizing the input features (i.e., transforming them to have zero mean and unit variance), we ensure that the LSTM model can learn temporal dependencies more effectively and converge faster during training.\\
+
+
+\begin{lstlisting}[language=Python, caption={Preprocessing: Label encoding, feature selection and scaling for LSTM training}, label={lst:preprocessing_scaling}]
+# Convert labels to binary values: 'attack' -> 1, 'benign' -> 0
+train_df[LABEL] = train_df[LABEL].map({'attack': 1, 'benign': 0})
+test_df[LABEL] = test_df[LABEL].map({'attack': 1, 'benign': 0})
+
+# Separate features and labels
+X_train = train_df[FEATURES]  # Select defined features for training
+y_train = train_df[LABEL]     # Select the corresponding labels
+X_test = test_df[FEATURES]    # Select same features for testing
+y_test = test_df[LABEL]       # Select the corresponding labels
+
+# Scale features using StandardScaler (fit on training data only)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)  # Fit and transform on training data
+X_test_scaled = scaler.transform(X_test)        # Transform test data using same scaler
+\end{lstlisting}
+
+It was also necessary to train the LSTM model with time sequences in order to fully leverage the advantages of LSTM architectures. Since LSTMs are specifically designed to recognize temporal patterns, providing input in sequential form significantly improves performance. \\
+Additionally, it is important that each sequence is labeled consistently as either \textit{benign} or \textit{attack}. This avoids ambiguous target values during training and ensures that the model can learn clear and unambiguous patterns for classification.
+
+\begin{lstlisting}[language=Python, caption={Create labeled sequences from time-series data for LSTM training}, label={lst:create_sequences}]
+import numpy as np
+
+def create_sequences(X, y, window_size=10):
+    X_seq = []
+    y_seq = []
+    for i in range(len(X) - window_size + 1):
+        label_window = y[i:i+window_size]
+        
+        # Only keep sequences where all labels in the window are the same
+        if np.all(label_window == label_window[0]):
+            X_seq.append(X[i:i+window_size])     # Add sequence window of features
+            y_seq.append(label_window[0])        # Add corresponding consistent label
+    return np.array(X_seq), np.array(y_seq)
+\end{lstlisting}
+
+The following listing is particularly interesting, as it highlights several important configuration choices that warrant further discussion.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{5cm}|p{6cm}|}
+\hline
+\textbf{Component} & \textbf{What it is} & \textbf{Why it is used} \\
+\hline
+\textbf{Dropout} & A regularization technique that randomly sets a fraction of input units to zero during training. & Dropout reduces overfitting by randomly disabling parts of the model during training, which leads to a more robust and generalized model.\\
+\hline
+\textbf{Sigmoid} & An activation function that outputs values between 0 and 1. & Because it is ideal for binary classification (benign, attack) by producing probabilities for class 0 or 1. \\
+\hline
+\textbf{Binary Cross-Entropy} & A loss function for binary classification tasks. & Measures the information loss between predicted probabilities and true binary labels, reflecting both class separation and probability calibration. \\
+\hline
+\textbf{Adam} & An optimization algorithm that combines momentum and adaptive learning rates. & Enables fast convergence and performs well with noisy and sparse gradients by adaptively scaling learning rates for each parameter. \\
+\hline
+\end{tabular}
+\caption{Explanation of key components used in the LSTM model configuration.\cite{dropout}\cite{sigmoid}\cite{loss_function}\cite{adam}}
+\label{tab:lstm_components}
+\end{table}
+
+\begin{lstlisting}[language=Python, caption={LSTM model definition for time-series classification}, label={lst:lstm_model}]
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout
+
+# Function to create a stacked LSTM model
+def create_lstm_model(num_features):
+    model = Sequential([
+        # First LSTM layer (returns full sequences for stacking)
+        LSTM(30, input_shape=(10, num_features), return_sequences=True),
+        Dropout(0.2),  # Dropout to prevent overfitting
+        # Second LSTM layer (only returns final output)
+        LSTM(15),
+        Dropout(0.2),  # Additional regularization
+        # Output layer for binary classification
+        Dense(1, activation='sigmoid')
+    ])
+    
+    # Compile model with binary crossentropy loss and accuracy metric
+    model.compile(
+        loss='binary_crossentropy',
+        optimizer='adam',
+        metrics=['accuracy']
+    )
+    return model
+
+# Create model with number of selected input features
+model = create_lstm_model(len(FEATURES))
+
+# Print model summary
+model.summary()
+
+# Print number of selected features
+print(len(FEATURES))
+\end{lstlisting}
+
+do I have to explain batch\_size. Hat ja nicht wirklich einlfuss auf das trainingsergebnis.\\
+In addition, it should be noted that an early stopping function can be helpful in some cases instead of using a fixed number of 20 epochs. However, for simplicity, I do not discuss or explain the additional code in this work.
+
+\begin{lstlisting}[language=Python, caption={Training the LSTM model with time-sequenced data}, label={lst:lstm_training}]
+# Train the LSTM model using the training sequences
+history = model.fit(
+    X_train_seq,        # Input training sequences
+    y_train_seq,        # Corresponding labels
+    epochs=20,          # Number of times the model will iterate over the entire training data
+    batch_size=32,      # Number of samples processed before the model updates
+    validation_data=(X_test_seq, y_test_seq),  # Data for evaluating the model during training
+    verbose=1           # Displays progress bar and training metrics
+)
+\end{lstlisting}
+
+After gaining an understanding of how we designed the LSTM architecture for our use case and the meaning of its various functions, we will review the results in the next chapter.
