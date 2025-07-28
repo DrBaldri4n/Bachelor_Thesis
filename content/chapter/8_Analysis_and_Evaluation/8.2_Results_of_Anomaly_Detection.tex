@@ -1,1 +1,72 @@
 \subsection{Results of Anomaly Detection Using the Machine Learning Model}
+
+In the chapter *Exploratory Data Analysis*, we also took a closer look at several events that are mentioned in the paper \cite{EV_Security}. These events were well suited for comparison with our dataset. During the analysis, we observed that the highest variance occurred during flooding attacks, while port scans showed almost no changes in the selected events.\\
+Now, we also examine the events identified as key features by the decision tree algorithm to determine whether we can uncover additional findings.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/syscalls_sys_exit_recvfrom.png}
+  \caption{syscalls\_sys\_exit\_recvfrom timeline}
+  \label{fig:syscalls_sys_exit_recvfrom}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/bus_access_not_shared.png}
+  \caption{bus\_access\_not\_shared timeline}
+  \label{fig:bus_access_not_shared}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/qdisc_qdisc_dequeue.png}
+  \caption{qdisc\_qdisc\_dequeue timeline}
+  \label{fig:qdisc_qdisc_dequeue}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/l2d_cache_wb.png}
+  \caption{l2d\_cache\_wb timeline}
+  \label{fig:l2d_cache_wb}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/syscalls_sys_enter_sendto.png}
+  \caption{syscalls\_sys\_enter\_sendto timeline}
+  \label{fig:syscalls_sys_enter_sendto}
+\end{figure}
+
+When we examine the key features, we can clearly observe that the highest peaks occur during flooding attacks, as previously identified. Interestingly, two of the key features also show increased activity during port scan attacks. This leads to the insight that these features could potentially be used to detect such attacks as well.\\
+When we now test our LSTM algorithm on the test dataset, we observe exactly this expected result.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/confusion_matrix.png}
+  \caption{Confusion matrix}
+  \label{fig:confusion_matrix}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{pics/confusion_matrix_FalsePositive_explained.png}
+  \caption{Falsely labeled attacks}
+  \label{fig:confusion_matrix_FalsePositive_explained}
+\end{figure}
+
+The algorithm has the most difficulty detecting the OS fingerprinting, aggressive scan, and Slowloris attacks. The port scan attack, however, was detected in most cases—35 out of 51.\\
+In the following we testet the lstm algorithm in the live enviorment, too with simular results.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{pics/live_test_analyse.png}
+    \caption{Average \texttt{attack\_prob} values per attack type compared to the benign baseline. Flooding attacks show significantly higher average probabilities than the benign reference, while slow and scanning attacks remain close to or even below it.}
+    \label{fig:attack_prob_analysis}
+\end{figure}
+
+\paragraph{Attack detection confidence analysis.}
+Figure~\ref{fig:attack_prob_analysis} shows the average \texttt{attack\_prob} values for different attack types, as estimated by the classifier, in comparison to the average value observed during benign traffic. The vertical dashed line represents the benign baseline (approximately 0.1614). \\
+Flooding attacks such as \textit{ICMP flood}, \textit{UDP flood}, and \textit{TCP flood} exhibit clearly distinguishable \texttt{attack\_prob} values, often well above 0.25, with \textit{ICMP flood} peaking around 0.36. These high values indicate strong model confidence and allow for reliable detection.\\
+In contrast, attacks like \textit{Slowloris}, \textit{Aggressive Scan}, \textit{Portscan}, and \textit{OS Fingerprinting} present significantly lower \texttt{attack\_prob} values, frequently falling below or very close to the benign average. This suggests that these attacks are more likely to be misclassified or overlooked, highlighting a potential weakness in the current detection model.\\
+These results align with real-world test observations, where slower and stealthier attacks blend more seamlessly with normal traffic patterns, making them more challenging to detect. Future work should explore enhanced feature extraction or anomaly-based methods to improve classification confidence for these low-profile attacks.
