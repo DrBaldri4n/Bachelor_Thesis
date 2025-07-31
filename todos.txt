@@ -1,0 +1,40 @@
+1.3
+Research Questions muss ich davor und danach noch paar zeilen schreiben.
+Die Research Questionsaufbau weiß ich ja und kann ich dann auch so lassen.
+
+Fundamentals Überschrift 
+2.0 Theoretical Background Fundamentals
+2.1 Anomaly Detection fundamentals
+Fundamentals noch die Fundamentals von Data Acquisiton und Exploratory Data Analysis rein, die ich in in dem Kapitel jeweils erkläre.
+
+3.0
+Related Work die papers raussuchen auf die ich später meine beweise führe z. B. die Decision tree + LSTM aussage ist gut. Diese Paper kommen dann in related work mit rein.
+HPC Kernel paper evtl. als eigenes Kapitel noch mit rein.
+Quellcode eigentlich so gut wie überall raus nur max wirklich wichtige zeilen drinnen lassen.
+
+5.1
+Feature Raw_syscalls_sys_enter raus
+
+5.2 datensatz privat public gegenüber stellen.
+alle key features als plot in Anhang und evtl. noch mehr erklären im paper selber.
+Warum hat das Feature "raw syscalls sys enter" bei uns keine ausschläge und beim paper key feautre?
+und auf mehr features eingehen.
+
+6.1 Feature selection
+code raus.
+Angriffe anders iwie rein tun.
+
+7.1
+code raus 
+die train-test screenshot evtl. als tabelle rein.
+
+7.2 parameter configuration
+Grafik aus paper https://arxiv.org/pdf/1706.03762 nutzen und damit LSTM aufbau erklären und darstellen
+code raus.
+
+8.1
+code raus
+8.2
+Unterscheiden
+Aufgenommene Daten und ergebnisse
+immer im vergleich mit öffentlichen datensatz wenn ich keine erklärung habe kann ich das auch so reinschreiben.
