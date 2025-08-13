@@ -1,7 +1,5 @@
 \subsection{Overview of LSTM (Long Short-Term Memory) Architecture}
 
-testets
-
 In this chapter, I want to provide a detailed overview of the LSTM architecture, as it is the most frequently used and complex model in my work.\\
 Long Short-Term Memory, or LSTM for short, was developed in 1997 by Sepp Hochreiter and Jürgen Schmidhuber as a solution to the vanishing gradient problem that occurs in traditional Recurrent Neural Networks (RNNs) \cite{LSTM_understanding}. It allows the network to learn dependencies over much longer time sequences, which is particularly important in my datasets, where attacks can be insidious and not immediately obvious.\\
 This addresses one of the core limitations of traditional RNNs, which struggle to learn long-term dependencies due to the vanishing gradient problem. When training these networks, the error signals either explode—causing oscillating weights and unstable learning—or vanish, preventing the network from learning dependencies over extended time periods. Standard RNNs can typically bridge about 5 to 10 time steps, whereas LSTMs are capable of learning dependencies over 1,000 or more time steps \cite{LSTM_understanding}, LSTMs process inputs sequentially, with a constant runtime of $\mathcal{O}(1)$ per time step.\\
