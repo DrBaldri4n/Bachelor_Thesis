@@ -10,46 +10,6 @@ For the monitoring interval, I followed recommendations from the literature\cite
 \\
 To further optimize efficiency and accuracy, I transitioned to developing the data acquisition script in Go. The Go programming language offers low-level hardware access and, with available libraries, integrates more seamlessly with the \texttt{perf} tool compared to Python.\\
 Additionally, the script exports all monitored hardware events from \texttt{perf} into a Prometheus database, enabling centralized and convenient access to all collected data. This setup streamlines subsequent analysis, visualization, and anomaly detection activities.\\
-The script is provided in the following section.\\
 \\
-Here you can find two functions of the script the first one is used to format the data for Prometheus and the second one is used to monitor the data with the \texttt{perf} tool. The whole script you can find in the appendix \ref{app:perf_script}.
-\\
-\begin{lstlisting}[caption={Go script for performance monitoring via perf for Prometheus}, label={lst:perf-prometheus-exporter}]
-// formatForPrometheus converts the filtered performance data into Prometheus-compatible metrics format.
-func formatForPrometheus(data string) string {
-	lines := strings.Split(data, "\n")
-	var result []string
-	for _, line := range lines {
-		parts := strings.Fields(line)
-		if len(parts) >= 2 {
-			// Clean up the metric name
-			metricName := strings.ReplaceAll(parts[1], ".", "_")
-			// metricName = strings.ReplaceAll(metricName, "-", "_")
-			// Remove decimal points from the number and parse it
-			metricValue := strings.ReplaceAll(parts[0], ".", "")
-			if value, err := strconv.ParseFloat(metricValue, 64); err == nil {
-				// Format value appropriately for Prometheus (integer or float)
-				if value == float64(int(value)) {
-					result = append(result, fmt.Sprintf("%s %d", metricName, int(value)))
-				} else {
-					result = append(result, fmt.Sprintf("%s %f", metricName, value))
-				}
-			}
-		}
-	}
-	return strings.Join(result, "\n")
-}
-
-// getPerfData runs `perf stat` with the specified events for a short duration (0.1s)
-// and returns the raw output as a string.
-func getPerfData(events []string) (string, error) {
-	eventList := strings.Join(events, ",")
-	cmd := exec.Command("perf", "stat", "-e", eventList, "--", "sleep", "0.1")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return "", err
-	}
-	return string(output), nil
-}
-\end{lstlisting}
+Instead of including the full script, its functionality can be summarized as follows. The script collects system performance metrics using the Linux \texttt{perf} tool and filters the relevant events specified in a YAML configuration file. It then formats these metrics in a way that is compatible with Prometheus and makes them available through an HTTP \texttt{/metrics} endpoint. This allows the performance data to be monitored continuously and integrated into observability platforms in a structured manner.
 

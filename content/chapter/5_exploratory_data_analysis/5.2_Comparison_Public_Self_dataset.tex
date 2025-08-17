@@ -1,39 +1,80 @@
-\subsection{Comparison of Public and Self-Generated Datasets}
-% warum ist der Vergleich wichige? zwischen den beiden Datensätzen
-The paper \textit{Enhancing EV Charging Station Security Using a Multi-dimensional Dataset}~\cite{EV_Security} and my work pursue the same goal: detecting anomalies through the analysis of HCP and kernel events. Therefore, it is essential to compare the underlying datasets on which the machine learning algorithms are trained. Such a comparison enables validation of the respective approaches and helps determine whether the results can be generalized.
+\subsection{Feature-Level Comparison of CICEVSE2024 and Self-Collected Datasets}
 
-% Beschreibung der Datensaätze: Herkunft Umfang, Struktur, Einschrnänkunen
-We tried to get as close as possible to the environment of the paper \textit{Enhancing EV Charging Station Security Using a Multi-dimensional Dataset}\\
+For clarity we will start like befor with the selected features from the paper: Enhancing EV Charging Station Security Using A Multi-dimensional Dataset : CICEVSE2024 \cite{EV_Security} the remaining features can be found in the appendix, where you can see similar results to those shown here.
+
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.7\textwidth]{pics/setup_public_paper.png}
-  \caption{setup EV Charing Station from \cite{EV_Security}}
-  \label{fig:setup_public_paper}
+  \includegraphics[width=1\textwidth]{pics/instructions.png}
+  \caption{instruction timeline}
+  \label{fig:instruction}
 \end{figure}
-We also used a Raspberry Pi to represent the EVSE-B and employed a wattmeter to monitor power consumption. The combination of HCP events, kernel events, and power consumption measurements will be discussed in future work. As mentioned in Chapter~\texttt{Data Sources for EVSE Anomaly Detection}, we also used the \texttt{perf} tool to monitor the various events.\\
-\\
-Therefore, we are able to observe approximately 900 events—similar to the comparison dataset. The complete observation period spans from \texttt{2025-07-22T18:00:00} to \texttt{2025-07-23T12:52:10}, with a sampling interval of 10 seconds, resulting in approximately 8,000 data rows with 905 columns. There are no missing (NaN) values in the dataset, and all measurements were collected using the \texttt{perf} tool, producing logically consistent outputs, as described in the chapter \textit{Data Sources for EVSE Anomaly Detection}.\\
-Features that are distributed across multiple CPU cores (e.g., \texttt{cpu=0,1,2,3}) are aggregated using appropriate \texttt{perf} flags. This prevents data loss and reduces the number of distinct features, aligning the dataset structure more closely with that of the comparison \texttt{CICEVSE2024} dataset.\\
-The \texttt{CICEVSE2024} dataset consists of the same 905 event types and comprises approximately 8,500 rows. Timestamps are recorded as floating-point numbers representing the time of each measurement. The data was collected using the \texttt{perf} tool, ensuring high precision and consistency across all recorded events.\\
-Out of the entire dataset, only four rows contain \texttt{NaN} values across all features. These rows can be considered outliers or errors and can easily be excluded during preprocessing. To ensure comparability with the reference dataset, features distributed across multiple CPU cores (e.g., \texttt{cpu=0,1,2,3}) were aggregated using appropriate \texttt{perf} flags. While it is not explicitly stated in the documentation of the \texttt{CICEVSE2024} dataset whether a similar aggregation was performed, the reduced feature dimensionality suggests that such a step may have been taken. Therefore, this approach was adopted in our dataset to align the structure and avoid data duplication.
-% Visulaisierung der Unterschiede
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/instructions_public.png}
+  \caption{instruction timeline (CICEVSE2024)}
+  \label{fig:instruction_public}
+\end{figure}
+The kernel events instruction is used to signal or record noteworthy occurrences within the kernel, such as system calls, interrupts, or state changes, often for the purposes of tracing \cite{instructions_feature_explained}.
+In the CICEVSE2024 dataset, this feature exhibits a relatively stable and low level in benign scenarios. However, in flooding attacks such as ICMP flood, SYN flood, TCP flood, and UDP flood a substantial increase in the kernel events metric can be observed. This increase can be attributed to the fact that such attacks overwhelm the target system, resulting in a significantly higher number of interrupts, state changes, and similar operations compared to benign states or lower-impact attacks, such as OS fingerprinting.\\
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/cache-misses.png}
+  \caption{cache-misses timeline}
+  \label{fig:cache-misses}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/cache-misses_public.png}
+  \caption{cache-misses timeline (CICEVSE2024)}
+  \label{fig:cache-misses_public}
+\end{figure}
+The cache-misses metric refers to the number of times the CPU is unable to locate the requested data in its cache, necessitating a fetch from a slower memory hierarchy level \cite{cachemisses_explaind}. In the analyzed dataset, this feature exhibits a very low and stable level in benign scenarios of our measurements, while the benign baseline of the CICEVSE2024 dataset shows considerably higher variability. For both datasets, the highest spikes in cache-misses occur during flooding attacks such as ICMP flood, SYN flood, TCP flood, and UDP flood which can be explained by the increased processing demands and the associated stress on the memory hierarchy under these high-throughput conditions.
+In the CICEVSE2024 dataset, the aggressive-scan attack towards the end of the observation period also displays a markedly high value, while the two preceding aggressive-scan instances show values either comparable to the benign baseline or moderately higher. This irregular pattern may be due to varying background processes or system activity during the respective attack executions. However, this remains speculative, as no comprehensive record of all concurrently running programs in the CICEVSE2024 dataset is available.\\
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/exc_taken.png}
-  \vspace{-3mm} % Abstand manuell entfernen (anpassbar)
-  \includegraphics[width=1\textwidth]{pics/exc_taken_public.png}
-  \caption{Comparison of \texttt{exc-taken} timelines: own dataset (top) and CICEVSE2024 dataset (bottom)}
-  \label{fig:exc_taken_comparison}
+  \caption{exc-taken timeline}
+  \label{fig:exc_taken}
 \end{figure}
-Despite notable differences in the absolute value ranges—likely due to architectural differences, sampling intervals, and system load—the time series of \texttt{exc\_taken} in both datasets exhibit structurally similar patterns. In both cases, this feature reacts to specific attacks with abrupt value changes especially by the flooding attacks are distinctive spikes, while maintaining stable behavior during benign phases. This confirms \texttt{exc\_taken} as a sensitive and transferable indicator of anomalous activity in kernel-space, suitable for machine learning-based intrusion detection approaches.
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\textwidth]{pics/kmem_kfree.png}
-  \vspace{-3mm} % Abstand manuell entfernen (anpassbar)
-  \includegraphics[width=1\textwidth]{pics/kmem_kfree_public.png}
-  \caption{Comparison of \texttt{kmem-kfree} timelines: own dataset (top) and CICEVSE2024 dataset (bottom)}
-  \label{fig:kmem_kfree_comparison}
+  \includegraphics[width=1\textwidth]{pics/exc_taken_public.png}
+  \caption{exc-taken timeline (CICEVSE2024)}
+  \label{fig:exc_taken_public}
 \end{figure}
-We observe similar peaks in both datasets, particularly during the flooding attacks, where the counter for \texttt{kmem\_kfree} increases noticeably. In our dataset, the resulting curve is cumulative, showing pronounced peaks corresponding to the attack phases. In contrast, the CICEVSE2024 dataset exhibits a more oscillating pattern, which is likely a result of different \texttt{perf} measurement flags. Specifically, their approach appears to monitor within a fixed time window, resetting the counter after each interval. This methodological difference leads to the observed oscillatory course in the public dataset, while the cumulative approach in our dataset amplifies peaks and produces a monotonically increasing curve.\\
+
+The \textit{exc\_taken} metric represents the number of exceptions taken by the CPU, indicating transitions from normal execution flow to an exception handling routine \cite{exctaken_explaind}. In our measurements, benign scenarios show very low and stable values, while the benign baseline of the CICEVSE2024 dataset exhibits significantly higher variability. In both datasets, the most pronounced peaks occur during flooding attacks such as ICMP flood, SYN flood, TCP flood, and UDP flood reflecting the increased occurrence of exceptions under high-load conditions.\\
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/cpu-migrations.png}
+  \caption{cpu-migrations timeline}
+  \label{fig:cpu-migrations}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/cpu-migrations_public.png}
+  \caption{cpu-migrations timeline (CICEVSE2024)}
+  \label{fig:cpu-migrations_public}
+\end{figure}
+The cpu-migrations metric counts the number of times a process is moved from one CPU core to another, which can occur for load balancing or scheduling purposes \cite{cpumigrations_explained}. In our measurements, this feature shows limited significance, with only occasional peaks during ICMP flood attacks an effect that is not particularly distinct. In contrast, the CICEVSE2024 dataset reports constant zero values in benign scenarios and very pronounced peaks during ICMP flood, SYN flood, and port scan attacks, making it a potentially valuable indicator for these events. In our data, cpu-migrations appears to behave as a continuously increasing counter, with its reset conditions unclear. Our analysis therefore relies on the difference between consecutive readings, which may contribute to the low discriminative power observed. It is possible—though purely speculative—that the CICEVSE2024 dataset employed a different measurement approach, such as directly logging event counts per sampling interval instead of cumulative totals.\\
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/dTLB-store-misses.png}
+  \caption{dTLB-stroe-misses timeline}
+  \label{fig:dTLB-stroe-misses}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{pics/dTLB-store-misses_public.png}
+  \caption{dTLB-stroe-misses timeline (CICEVSE2024)}
+  \label{fig:dTLB-stroe-misses_public}
+\end{figure}
+
+The dTLB-store-misses metric measures the number of store (write) operations that miss in the data Translation Lookaside Buffer (dTLB), requiring address translation from slower memory structures \cite{dtlbstoremisses_explained}. In our measurements, benign scenarios exhibit a very stable and low baseline, whereas the benign baseline of the CICEVSE2024 dataset shows greater variability. In both datasets, the highest peaks occur during flooding attacks such as ICMP flood, SYN flood, TCP flood, and UDP flood. In the CICEVSE2024 dataset, aggressive-scan and port-scan attacks show varying peak intensities: initially strong, then close to benign levels, and later extremely high. This variation may be due to slightly different variants of these attack types being used, although this remains speculative.\\
 \\
-Therefore, we have sufficient data to train our models with minimal error values. Moreover, for the selected features from the paper \textit{Enhancing EV Charging Station Security Using a Multi-dimensional Dataset}~\cite{EV_Security}, we observe similar peaks and behavioral patterns in both attack and benign scenarios. This indicates a high degree of similarity between the datasets, further supporting the generalizability and validity of the selected features for anomaly detection.
+Interestingly, flooding attacks such as ICMP flood, SYN flood, TCP flood, and UDP flood consistently produce the highest peaks across multiple performance metrics, including \textit{kernel events}, \textit{cache-misses}, \textit{exceptions taken}, \textit{cpu-migrations}, and \textit{dTLB-store-misses}, as well as in the additional analyzed features. These attacks impose a substantial processing load on the target system, resulting in more frequent interrupts, exceptions, cache lookups, and memory translations, alongside increased process scheduling activity. Among these, the ICMP flood often exhibits the most pronounced impact, which can be attributed to the fact that each ICMP Echo Request must be fully processed and answered, thereby generating significant CPU and memory subsystem activity.\\
+In contrast, benign scenarios especially in our own measurements remain largely stable and low across these features, whereas the CICEVSE2024 dataset displays higher variability in benign baselines. For certain attacks, such as \textit{aggressive-scan} or \textit{port-scan}, the CICEVSE2024 dataset reveals fluctuating peak intensities, which may be due to slight variations in the specific attack implementations used; however, this remains speculative.
