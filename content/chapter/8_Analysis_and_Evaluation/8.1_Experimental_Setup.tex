@@ -1,50 +1,22 @@
 \subsection{Experimental Setup and Evaluation Metrics}
 
-As mentioned in Chapter 7.1 *LSTM Architecture and Preprocessing*, the data was split into two datasets: one for training and one for testing. In the following figures, we analyze the trained model using the test dataset, which is also included in the appendix.\\
+To evaluate the model objectively and verify whether it correctly detects anomalies, this work follows a systematic approach. Clearly separated test data from the dataset \textit{CICEVSE2024} as well as from the dataset collected in the course of this work were used. In addition, the model was tested in a live environment with real-time detection.\\
 
-At first we tested the lstm architecutre in the test dataset where we took befor a closer look, that the distribution of attack an benign data is simular to the train data. the result where ploted with an confusion matrix. \\
-In the following, we tested the LSTM model in the live system too. Using the following scripts:
+The dataset \textit{CICEVSE2024} and the dataset collected for this work were already split into training and test data, as described in Chapter~7.1 \textit{LSTM Architecture and Preprocessing}. The test data was used to evaluate the model’s performance and consists of fixed time periods to ensure that the LSTM correctly utilizes its memory and detects attacks based on changes in the event data over time.\\
 
-\begin{lstlisting}[caption={Create CSV file and define the correct PromQL query}]
-csv_file = 'monitor_lstm_predictions.csv'
-header = ['timestamp'] + FEATURES + ['benign_prob', 'attack_prob', 'prediction']
+The trained LSTM model as well as the scaling parameters (StandardScaler) were exported and deployed for live classification on a resource-constrained Raspberry Pi system. Using Prometheus as a monitoring solution and a specially developed performance exporter (see Appendix~\pageref{code:perf_exporter}), measurement data could be provided at the desired interval.\\
 
-# Function to query a single metric value from Prometheus
-def get_metric_value(prom, feat):
-    base_feat = feat.replace('-', '_')
+To realistically test the model’s behavior, various attack patterns (e.g., flooding, scans, Slowloris) were executed in an automated manner with precise time logging (see Appendix~\pageref{code:xy}). This enabled a targeted analysis of the classification output during typical threat scenarios.\\
 
-    # Try without "perf_" prefix
-    try:
-        data = prom.get_current_metric_value(metric_name=f"sum({base_feat})")
-        df = MetricSnapshotDataFrame(data)
-        if not df.empty and 'value' in df.columns:
-            return float(df.iloc[0]['value'])
-    except Exception:
-        pass
+\textbf{Evaluation Metrics:} The quality of anomaly detection was assessed using established metrics for binary classification:
+\begin{itemize}
+    \item \textbf{Accuracy}: Proportion of correctly classified samples relative to the total number of samples.
+    \item \textbf{Precision}: Proportion of actual attacks among all samples classified as attacks.
+    \item \textbf{Recall}: Proportion of detected attacks among all actual attacks.
+    \item \textbf{F1-Score}: Harmonic mean of Precision and Recall, particularly relevant for imbalanced classes.
+    \item \textbf{Visualization}: Additionally, distribution and edge cases were illustrated using the Confusion Matrix, ROC Curve, and Precision-Recall Curve.
+\end{itemize}
 
-    # Try with "perf_" prefix as fallback
-    try:
-        data = prom.get_current_metric_value(metric_name=f"sum(perf_{base_feat})")
-        df = MetricSnapshotDataFrame(data)
-        if not df.empty and 'value' in df.columns:
-            return float(df.iloc[0]['value'])
-    except Exception:
-        pass
+The focus, beyond the pure detection rate, was placed on the robustness of the model with respect to different types of attacks and possible data deviations during live operation.\\
 
-    return np.nan
-\end{lstlisting}
-
-\begin{lstlisting}[caption={Get metric values and log them into the CSV file}]
-while True:
-    # 1. Query metric values
-    values_array = [get_metric_value(prom, feat) for feat in FEATURES]
-    
-    # 2. Log to CSV
-    row = [datetime.now().isoformat()] + values_array + [benign_prob, attack_prob, prediction]
-    with open(csv_file, 'a', newline='') as f:
-        csv.writer(f).writerow(row)
-
-    time.sleep(5)
-\end{lstlisting}
-
-At the same time, I started the attack script—just [listinging 17] as used before—to automate the attacks and generate a synchronized timestamp log. This allows later combination into a single CSV file, making the exploratory data analysis more effective. You can finde this dataset also attached under the name: "monitor\_lstm\_predictions\_livedata.parquet".
+These metrics serve as the foundation for the detailed result analysis in the following section and allow for a transparent evaluation of the practical applicability of the approach.

@@ -72,7 +72,6 @@ Nevertheless, it is essential to examine the selected features in the context of
 As already observed, the \texttt{node-stores} feature shows a clear pattern that helps in detecting flooding attacks, as described before, while the \texttt{sys\_calls\_sys\_enter\_kill} feature records the number of times the Linux kernel processes the ``kill'' system call (i.e., \texttt{sys\_kill}), which is used by processes to send signals to other processes. During a port scan attack, tools such as \texttt{nmap} or similar scanners attempt to rapidly open and close many connections across a wide range of ports. This aggressive probing leads to the frequent creation and termination of network sockets and, in some cases, the spawning of short-lived processes for each connection attempt.\\
 In summary, the high peaks in \texttt{sys\_calls\_sys\_enter\_kill} during port scan attacks reflect the system's intensive signaling behavior as it deals with the rapid creation and destruction of connections and processes, making it a strong indicator for detecting such attacks.
 
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{pics/node-stores.png}
