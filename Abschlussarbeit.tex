@@ -186,7 +186,7 @@
 % Filter fuer Literatur und Quellen definieren
 % ----------------------------------------------------------------------------------------------------------
 
-\defbibheading{Literatur}{\section*{Literaturverzeichnis}} 
+\defbibheading{Literatur}{\section*{Bibliography}} 
 \defbibheading{Quellen}{\section*{Quellenverzeichnis}} 
   
 \defbibfilter{Literatur}{\not\keyword{online}} 
@@ -212,28 +212,25 @@
 \lhead{Anhang \thesection}
 
 \appendix
-\section*{Anhang}
+\section*{Appendix}
 
 \label{app:perf_script}
-\input{content/chapter/listing/code}
+\input{content/chapter/listing/1_go_monitoring_via_prometheus.tex}
+\input{content/chapter/listing/2_Python_from_prom_to_csv.tex}
+\input{content/chapter/listing/3_python_attack_skript.tex}
 
+\input{content/chapter/formular_stuff/appendix_paper_features.tex}
+\input{content/chapter/formular_stuff/appendix_dt_features.tex}
 
 \phantomsection
 \addcontentsline{toc}{section}{Anhang}
 \addtocontents{toc}{\vspace{-0.5em}}
 
-content des beigefügten Datenträgers:
+Contents of the enclosed storage medium:
 \begin{itemize}
-  \item $\ldots$
-  \item $\ldots$
+  \item Bachelor thesis in PDF format.
+  \item Source code of the Python and Go scripts.
 \end{itemize}
-
-\section{Domändenmodell}
-Ein toller Anhang, der nicht nur als \glqq{}\emph{Müllhalde}\grqq{} genutzt wird, sondern in dem Bilder und contente auch mit eigenen Worten erklärt werden und den man auch für sich alleine lesen kann. Es sollten auch Referenzen auf die zugehörige ausführliche Behandlung im Hauptteil inklusive Seitenangabe mit $\backslash$\texttt{pageref} gegeben werden.
-
-\subsection*{Screenshot}
-\label{app:screenshot}
-Unterkategorie, die nicht im contentsverzeichnis auftaucht.
 
 \appendix
 

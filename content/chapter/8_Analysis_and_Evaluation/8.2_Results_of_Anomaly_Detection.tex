@@ -128,10 +128,11 @@ Vuln-Scan                 & 0  & 46  \\
   \begin{minipage}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{pics/roc_curve_CEVSE2024.png}
-    \caption{Roc curve for the CEVSE2024 dataset}
+    \caption{Roc curve for the CEVSE2024 dataset}l
     \label{fig:roc_curve_CEVSE2024}
   \end{minipage}
-  \caption*{The ROC curves illustrate the model's performance in distinguishing between benign and attack traffic. The self-collected dataset shows a lower area under the curve (AUC) compared to the CEVSE2024 dataset.}
+  \caption*{The ROC curves illustrate the model's performance in distinguishing between benign and attack traffic. The self-collected dataset shows a lower area under the curve (AUC) compared to the CEVSE2024 dataset, indicating that the model is less effective at correctly distinguishing attacks from benign traffic on the self-collected dataset. This lower AUC reflects a higher rate of misclassifications and a reduced overall discriminative capability, which can be attributed to the varying strong peaks observed in the self-collected dataset, as already illustrated in the EDA. In contrast, the high AUC on the CEVSE2024 dataset indicates near-perfect separation between benign and attack samples.}
+
 \end{figure}
 
 \begin{figure}[H]
@@ -148,13 +149,26 @@ Vuln-Scan                 & 0  & 46  \\
     \caption{Precision-Recall curve for the CEVSE2024 dataset}
     \label{fig:precision_recall_curve_CEVSE2024}
   \end{minipage}
-  \caption*{The Precision-Recall curves provide insights into the trade-off between precision and recall for different thresholds.}
+  \caption*{The Precision-Recall curves highlight a clear difference between the two datasets. For the self-collected dataset, the model achieves an average precision of 0.69, resulting in a curve that indicates a noticeable trade-off between precision and recall. This suggests that while the model can detect many attacks, it also produces a non-negligible number of false positives or misses some attacks. In contrast, the CEVSE2024 dataset yields a perfect score of 1.0, where the curve remains at the upper boundary, indicating flawless separation between benign and attack samples. This demonstrates that the model performs ideally on the CEVSE2024 dataset, while performance on the self-collected dataset remains more challenging.}
 \end{figure}
 
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{pics/recall_stat_tests.png}
+    \caption{Recall statistics for the self-collected dataset}
+    \label{fig:recall_stat_tests}
+  \end{minipage}\hfill
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{pics/recall_stat_tests_CEVSE2024.png}
+    \caption{Recall statistics for the CEVSE2024 dataset}
+    \label{fig:recall_stat_tests_CEVSE2024}
+  \end{minipage}
+  \caption*{It can be observed, similar to the previous results, that some attacks (e.g., OS Fingerprinting, Aggressive Scan) are more difficult to detect in the self-collected dataset. More importantly, however, this figure shows that the p-value in both datasets is close to zero. This indicates that the LSTM model’s detection is not random, but rather that the benign and attack data differ significantly, confirming the reliability of the results.}
 
-After the testing in analyzing with the monitored system the work include also the testing of the LSTM model in a live system, this is important to ensure if the model can also detect attacks if the data is not in the 100\% same timestamps and what happen if the envoironment is overloaded that the new data comes not in the same time intervalls as the trainings data if the porcessor is overloaded.\\
-At first it was needed to store the lstm model as .keras file and also to safe the scaler as a .pkl file. That it is possible to scale all life data in the same was as the training data.
-
+\end{figure}
 
 After the testing in analyzing with the monitored system, the work also includes testing the LSTM model in a live system. This is important to ensure that the model can detect attacks even if the data does not have exactly the same timestamps, and to observe what happens if the environment is overloaded so that new data does not arrive at the same intervals as the training data when the processor is under heavy load.\\
 At first, it was necessary to store the LSTM model as a .keras file and also save the scaler as a .pkl file. This makes it possible to scale all live data in the same way as the training data.\\

@@ -1,0 +1,165 @@
+\begin{lstlisting}[caption={Go script for performance monitoring via perf for Prometheus}, label={lst:perf-prometheus-exporter}]
+package main
+import (
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"os/exec"
+	"strconv"
+	"strings"
+	"time"
+
+	"gopkg.in/yaml.v2"
+)
+
+// Config represents the structure of the YAML configuration file.
+// It includes high-level performance counters (HCP), software events (SW), and hardware events (HW).
+type Config struct {
+	HCP []string `yaml:"hcp"`
+	SW  []string `yaml:"sw"`
+	HW  []string `yaml:"hw"`
+}
+
+// Global variable to store the most recent performance data.
+var perfData string
+
+// getPerfData runs `perf stat` with the specified events for a short duration (0.1s)
+// and returns the raw output as a string.
+func getPerfData(events []string) (string, error) {
+	eventList := strings.Join(events, ",")
+	cmd := exec.Command("perf", "stat", "-e", eventList, "--", "sleep", "0.1")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", err
+	}
+	return string(output), nil
+}
+
+// parsePerfData filters and extracts only the relevant lines from perf output,
+// based on the provided list of events.
+func parsePerfData(data string, events []string) string {
+	lines := strings.Split(data, "\n")
+	var result []string
+	for _, line := range lines {
+		for _, event := range events {
+			if strings.Contains(line, event) {
+				result = append(result, line)
+				break
+			}
+		}
+	}
+	return strings.Join(result, "\n")
+}
+
+// formatForPrometheus converts the filtered performance data into Prometheus-compatible metrics format.
+func formatForPrometheus(data string) string {
+	lines := strings.Split(data, "\n")
+	var result []string
+	for _, line := range lines {
+		parts := strings.Fields(line)
+		if len(parts) >= 2 {
+			// Clean up the metric name
+			metricName := strings.ReplaceAll(parts[1], ".", "_")
+			// metricName = strings.ReplaceAll(metricName, "-", "_")
+			// Remove decimal points from the number and parse it
+			metricValue := strings.ReplaceAll(parts[0], ".", "")
+			if value, err := strconv.ParseFloat(metricValue, 64); err == nil {
+				// Format value appropriately for Prometheus (integer or float)
+				if value == float64(int(value)) {
+					result = append(result, fmt.Sprintf("%s %d", metricName, int(value)))
+				} else {
+					result = append(result, fmt.Sprintf("%s %f", metricName, value))
+				}
+			}
+		}
+	}
+	return strings.Join(result, "\n")
+}
+
+// metricsHandler handles HTTP requests and returns the formatted performance metrics.
+func metricsHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, formatForPrometheus(perfData))
+}
+
+// chunkEvents splits the list of events into smaller chunks of a given size.
+// This helps avoid issues with perf's limit on the number of simultaneous counters.
+func chunkEvents(events []string, chunkSize int) [][]string {
+	var chunks [][]string
+	for i := 0; i < len(events); i += chunkSize {
+		end := i + chunkSize
+		if end > len(events) {
+			end = len(events)
+		}
+		chunks = append(chunks, events[i:end])
+	}
+	return chunks
+}
+
+// validateEvent checks if a given performance event is available on the system by using `perf list`.
+func validateEvent(event string) bool {
+	cmd := exec.Command("perf", "list")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("Error listing perf events:", err)
+		return false
+	}
+	return strings.Contains(string(output), event)
+}
+
+func main() {
+	// Load the YAML configuration file
+	config := Config{}
+	data, err := ioutil.ReadFile("config.yml")
+	if err != nil {
+		fmt.Println("Error reading config file:", err)
+		return
+	}
+	err = yaml.Unmarshal(data, &config)
+	if err != nil {
+		fmt.Println("Error parsing config file:", err)
+		return
+	}
+
+	// Validate and collect all available events from the config
+	var validEvents []string
+	for _, event := range append(config.HCP, config.SW...) {
+		if validateEvent(event) {
+			validEvents = append(validEvents, event)
+		}
+	}
+	for _, event := range config.HW {
+		if validateEvent(event) {
+			validEvents = append(validEvents, event)
+		}
+	}
+
+	// Split the events into manageable chunks (TODO: dynamically adjust based on CPU performance)
+	eventChunks := chunkEvents(validEvents, 6)
+
+	// Start a background goroutine to periodically collect performance data
+	go func() {
+		for {
+			var allPerfData []string
+			for _, chunk := range eventChunks {
+				data, err := getPerfData(chunk)
+				if err != nil {
+					fmt.Println("Error:", err)
+					allPerfData = append(allPerfData, "Error fetching data")
+				} else {
+					allPerfData = append(allPerfData, parsePerfData(data, chunk))
+				}
+			}
+			// Combine data from all chunks into one string for Prometheus export
+			perfData = strings.Join(allPerfData, "\n")
+			time.Sleep(100 * time.Millisecond)
+		}
+	}()
+
+	// Start the HTTP server that exposes the `/metrics` endpoint for Prometheus scraping
+	http.HandleFunc("/metrics", metricsHandler)
+	fmt.Println("Starting server on :9011")
+	if err := http.ListenAndServe(":9011", nil); err != nil {
+		fmt.Println("Error starting server:", err)
+	}
+}
+\end{lstlisting}

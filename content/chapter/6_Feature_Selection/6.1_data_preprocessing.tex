@@ -2,9 +2,9 @@
 
 As already mentioned, for the \texttt{CICEVSE2024} dataset, it was only necessary to remove four rows containing \texttt{NaN} values to obtain clean and usable data for the initial processing step. \\
 
-For the generated dataset from our environment, I first aimed to include as much benign-status data as possible. Therefore, I made a Prometheus PromQL request to retrieve monitoring data from a night when the environment was not used for other tests (see Appendix~\ref{listing4}). \\
+For the generated dataset from our environment, I first aimed to include as much benign-status data as possible. Therefore, I made a Prometheus PromQL request to retrieve monitoring data from a night when the environment was not used for other tests (see Appendix~\ref{lst:prometheustocsv_scraper}). \\
 
-Then, I initiated the attacks to monitor the behavior of the HCP and kernel events in our environment under attack conditions (see Appendix~\ref{listing5}).  
+Then, I initiated the attacks to monitor the behavior of the HCP and kernel events in our environment under attack conditions (see Appendix~\ref{lst:python_attack_script}).  
 Table~\ref{tab:attacks} provides an overview of all attacks carried out during the experiment.
 
 \begin{table}[H]

