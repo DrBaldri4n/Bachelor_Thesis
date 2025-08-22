@@ -1,80 +1,80 @@
 \subsection{Feature Comparison of CICEVSE2024 and Self-Collected Datasets}
 
-For clarity we will start like befor with the selected features from the paper: Enhancing EV Charging Station Security Using A Multi-dimensional Dataset : CICEVSE2024 \cite{EV_Security} the remaining features can be found in the appendix, where you can see similar results to those shown here.
+For clarity, we will start as before with the selected features from the paper: "Enhancing EV Charging Station Security Using A Multi-dimensional Dataset: CICEVSE2024" \cite{EV_Security}. The remaining features can be found in the appendix, where similar results to those shown here are presented.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/instructions.png}
-  \caption{instruction timeline}
+  \caption{\texttt{Instruction} timeline.}
   \label{fig:instruction}
 \end{figure}
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/instructions_public.png}
-  \caption{instruction timeline (CICEVSE2024)}
+  \caption{\texttt{Instruction} timeline (CICEVSE2024).}
   \label{fig:instruction_public}
 \end{figure}
-The kernel events instruction is used to signal or record noteworthy occurrences within the kernel, such as system calls, interrupts, or state changes, often for the purposes of tracing \cite{instructions_feature_explained}.
-In the CICEVSE2024 dataset, this feature exhibits a relatively stable and low level in benign scenarios. However, in flooding attacks such as ICMP flood, SYN flood, TCP flood, and UDP flood a substantial increase in the kernel events metric can be observed. This increase can be attributed to the fact that such attacks overwhelm the target system, resulting in a significantly higher number of interrupts, state changes, and similar operations compared to benign states or lower-impact attacks, such as OS fingerprinting.\\
+The kernel events \texttt{instruction} is used to signal or record noteworthy occurrences within the kernel, such as system calls, interrupts, or state changes, often for the purposes of tracing \cite{instructions_feature_explained}.
+In the CICEVSE2024 dataset, this feature exhibits a relatively stable and low level in benign scenarios. However, in flooding attacks such as ICMP-Flood, SYN-Flood, TCP-Flood, and UDP-Flood, a substantial increase in the kernel events metric can be observed. This increase can be attributed to the fact that such attacks overwhelm the target system, resulting in a significantly higher number of interrupts, state changes, and similar operations compared to benign states or lower-impact attacks such as OS-Fingerprinting.\\
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/cache-misses.png}
-  \caption{cache-misses timeline}
+  \caption{\texttt{Cache-misses} timeline.}
   \label{fig:cache-misses}
 \end{figure}
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/cache-misses_public.png}
-  \caption{cache-misses timeline (CICEVSE2024)}
+  \caption{\texttt{Cache-misses} timeline (CICEVSE2024).}
   \label{fig:cache-misses_public}
 \end{figure}
-The cache-misses metric refers to the number of times the CPU is unable to locate the requested data in its cache, necessitating a fetch from a slower memory hierarchy level \cite{cachemisses_explaind}. In the analyzed dataset, this feature exhibits a very low and stable level in benign scenarios of our measurements, while the benign baseline of the CICEVSE2024 dataset shows considerably higher variability. For both datasets, the highest spikes in cache-misses occur during flooding attacks such as ICMP flood, SYN flood, TCP flood, and UDP flood which can be explained by the increased processing demands and the associated stress on the memory hierarchy under these high-throughput conditions.
-In the CICEVSE2024 dataset, the aggressive-scan attack towards the end of the observation period also displays a markedly high value, while the two preceding aggressive-scan instances show values either comparable to the benign baseline or moderately higher. This irregular pattern may be due to varying background processes or system activity during the respective attack executions. However, this remains speculative, as no comprehensive record of all concurrently running programs in the CICEVSE2024 dataset is available.\\
+The \texttt{cache-misses} metric refers to the number of times the CPU is unable to locate the requested data in its cache, necessitating a fetch from a slower memory hierarchy level \cite{cachemisses_explaind}. In the analyzed dataset, this feature exhibits a very low and stable level in benign scenarios of our measurements, while the benign baseline of the CICEVSE2024 dataset shows considerably higher variability. For both datasets, the highest spikes in \texttt{cache-misses} occur during flooding attacks such as ICMP-Flood, SYN-Flood, TCP-Flood, and UDP-Flood, which can be explained by the increased processing demands and the associated stress on the memory hierarchy under these high-throughput conditions.
+In the CICEVSE2024 dataset, the Aggressive-Scan attack towards the end of the observation period also displays a markedly high value, while the two preceding Aggressive-Scan instances show values either comparable to the benign baseline or moderately higher. This irregular pattern may be due to varying background processes or system activity during the respective attack executions. However, this remains speculative, as no comprehensive record of all concurrently running programs in the CICEVSE2024 dataset is available.\\
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/exc_taken.png}
-  \caption{exc-taken timeline}
+  \caption{\texttt{Exc-taken} timeline.}
   \label{fig:exc_taken}
 \end{figure}
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/exc_taken_public.png}
-  \caption{exc-taken timeline (CICEVSE2024)}
+  \caption{\texttt{Exc-taken} timeline (CICEVSE2024).}
   \label{fig:exc_taken_public}
 \end{figure}
 
-The \textit{exc\_taken} metric represents the number of exceptions taken by the CPU, indicating transitions from normal execution flow to an exception handling routine \cite{exctaken_explaind}. In our measurements, benign scenarios show very low and stable values, while the benign baseline of the CICEVSE2024 dataset exhibits significantly higher variability. In both datasets, the most pronounced peaks occur during flooding attacks such as ICMP flood, SYN flood, TCP flood, and UDP flood reflecting the increased occurrence of exceptions under high-load conditions.\\
+The \texttt{exc-taken} metric represents the number of \texttt{exceptions taken} by the CPU, indicating transitions from normal execution flow to an exception handling routine \cite{exctaken_explaind}. In our measurements, benign scenarios show very low and stable values, while the benign baseline of the CICEVSE2024 dataset exhibits significantly higher variability. In both datasets, the most pronounced peaks occur during flooding attacks such as ICMP-Flood, SYN-Flood, TCP-Flood, and UDP-Flood, reflecting the increased occurrence of exceptions under high-load conditions.\\
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/cpu-migrations.png}
-  \caption{cpu-migrations timeline}
+  \caption{\texttt{Cpu-migrations} timeline.}
   \label{fig:cpu-migrations}
 \end{figure}
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/cpu-migrations_public.png}
-  \caption{cpu-migrations timeline (CICEVSE2024)}
+  \caption{\texttt{Cpu-migrations} timeline (CICEVSE2024).}
   \label{fig:cpu-migrations_public}
 \end{figure}
-The cpu-migrations metric counts the number of times a process is moved from one CPU core to another, which can occur for load balancing or scheduling purposes \cite{cpumigrations_explained}. In our measurements, this feature shows limited significance, with only occasional peaks during ICMP flood attacks an effect that is not particularly distinct. In contrast, the CICEVSE2024 dataset reports constant zero values in benign scenarios and very pronounced peaks during ICMP flood, SYN flood, and port scan attacks, making it a potentially valuable indicator for these events. In our data, cpu-migrations appears to behave as a continuously increasing counter, with its reset conditions unclear. Our analysis therefore relies on the difference between consecutive readings, which may contribute to the low discriminative power observed. It is possible—though purely speculative—that the CICEVSE2024 dataset employed a different measurement approach, such as directly logging event counts per sampling interval instead of cumulative totals.\\
+The \texttt{cpu-migrations} metric counts the number of times a process is moved from one CPU core to another, which can occur for load balancing or scheduling purposes \cite{cpumigrations_explained}. In our measurements, this feature shows limited significance, with only occasional peaks during ICMP-Flood attacks, an effect that is not particularly distinct. In contrast, the CICEVSE2024 dataset reports constant zero values in benign scenarios and very pronounced peaks during ICMP-Flood, SYN-Flood, and Portscan attacks, making it a potentially valuable indicator for these events. In our data, \texttt{cpu-migrations} appears to behave as a continuously increasing counter, with its reset conditions unclear. Our analysis relies on the difference between consecutive readings, which may contribute to the low discriminative power observed. It is possible, though purely speculative, that the CICEVSE2024 dataset employed a different measurement approach, such as directly logging event counts per sampling interval instead of cumulative totals. It is worth considering that our system might exhibit lower load distribution or load-balancing, leading to scenarios where during attacks typically only one CPU core is fully utilized while the others remain relatively idle, resulting in very few migrations between different cores.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/dTLB-store-misses.png}
-  \caption{dTLB-stroe-misses timeline}
+  \caption{\texttt{dTLB-store-misses} timeline.}
   \label{fig:dTLB-stroe-misses}
 \end{figure}
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/dTLB-store-misses_public.png}
-  \caption{dTLB-stroe-misses timeline (CICEVSE2024)}
+  \caption{\texttt{dTLB-store-misses} timeline (CICEVSE2024).}
   \label{fig:dTLB-stroe-misses_public}
 \end{figure}
 
-The dTLB-store-misses metric measures the number of store (write) operations that miss in the data Translation Lookaside Buffer (dTLB), requiring address translation from slower memory structures \cite{dtlbstoremisses_explained}. In our measurements, benign scenarios exhibit a very stable and low baseline, whereas the benign baseline of the CICEVSE2024 dataset shows greater variability. In both datasets, the highest peaks occur during flooding attacks such as ICMP flood, SYN flood, TCP flood, and UDP flood. In the CICEVSE2024 dataset, aggressive-scan and port-scan attacks show varying peak intensities: initially strong, then close to benign levels, and later extremely high. This variation may be due to slightly different variants of these attack types being used, although this remains speculative.\\
-\\
-Interestingly, flooding attacks such as ICMP flood, SYN flood, TCP flood, and UDP flood consistently produce the highest peaks across multiple performance metrics, including \textit{kernel events}, \textit{cache-misses}, \textit{exceptions taken}, \textit{cpu-migrations}, and \textit{dTLB-store-misses}, as well as in the additional analyzed features. These attacks impose a substantial processing load on the target system, resulting in more frequent interrupts, exceptions, cache lookups, and memory translations, alongside increased process scheduling activity. Among these, the ICMP flood often exhibits the most pronounced impact, which can be attributed to the fact that each ICMP Echo Request must be fully processed and answered, thereby generating significant CPU and memory subsystem activity.\\
-In contrast, benign scenarios especially in our own measurements remain largely stable and low across these features, whereas the CICEVSE2024 dataset displays higher variability in benign baselines. For certain attacks, such as \textit{aggressive-scan} or \textit{port-scan}, the CICEVSE2024 dataset reveals fluctuating peak intensities, which may be due to slight variations in the specific attack implementations used; however, this remains speculative.
+The \texttt{dTLB-store-misses} metric measures the number of store (write) operations that miss in the data Translation Lookaside Buffer (dTLB), requiring address translation from slower memory structures \cite{dtlbstoremisses_explained}. In our measurements, benign scenarios exhibit a very stable and low baseline, whereas the benign baseline of the CICEVSE2024 dataset shows greater variability. In both datasets, the highest peaks occur during flooding attacks such as ICMP-Flood, SYN-Flood, TCP-Flood, and UDP-Flood. In the CICEVSE2024 dataset, Aggressive-Scan and Portscan attacks show varying peak intensities: initially strong, then close to benign levels, and later extremely high. This variation may be due to slightly different variants of these attack types being used, although this remains speculative.\\
+
+It is noteworthy that flooding attacks such as ICMP-Flood, SYN-Flood, TCP-Flood, and UDP-Flood consistently produce the highest peaks across multiple performance metrics, including kernel events, \texttt{cache-misses}, \texttt{exceptions taken}, \texttt{cpu-migrations}, and \texttt{dTLB-store-misses}, as well as in the additional analyzed features. These attacks impose a substantial processing load on the target system, resulting in more frequent interrupts, exceptions, cache lookups, and memory translations, alongside increased process scheduling activity. Among these, the ICMP-Flood often exhibits the most pronounced impact, which can be attributed to the fact that each ICMP Echo Request must be fully processed and answered, thereby generating significant CPU and memory subsystem activity.\\
+In contrast, benign scenarios, especially in our own measurements, remain largely stable and low across these features, whereas the CICEVSE2024 dataset displays higher variability in benign baselines. For certain attacks, such as Aggressive-Scan or Portscan, the CICEVSE2024 dataset reveals fluctuating peak intensities, which may be due to slight variations in the specific attack implementations used; however, this remains speculative.

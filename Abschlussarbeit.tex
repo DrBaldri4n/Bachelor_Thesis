@@ -3,7 +3,6 @@
 \input{lib/commands}
 \addbibresource{literatur.bib}
 
-
 \begin{document}
 
 
@@ -18,24 +17,28 @@
 \MyTitelseite{pics/resilent}	% Optionales Logo des extern betreuenden Unternehmens
 {1}								% Style der Titelseite (1 oder 2)
 {Bachelorarbeit}				% Typ der Abschlussarbeit (\in {Bachelorarbeit, Masterarbeit})
-{AI-based Anomaly Detection for Electric Vehicle Supply Equipment using LSTM Architecture}				% Thema der Arbeit						
+{Artificial Intelligence-Based Anomaly Detection for Electric Vehicle Supply Equipment Using Long Short-Term Memory Architecture}				% Thema der Arbeit						
 {Prof.\ Dr.\ Rudolf Hackenberg}		% Betreuer
 {Prof.\ Dr.\ Sebastian Fischer}	% Zweitgutachter
-{23.08.\the\year}				% Abgabedatum
+{22.08.\the\year}				% Abgabedatum
 
 %\thispagestyle{empty}
 ~\pagebreak
-
+\lhead{}
+\rhead{}
 \setcounter{page}{1} 
+
 
 % ----------------------------------------------------------------------------------------------------------
 % Eigenständigkeitserklaerung
 % ----------------------------------------------------------------------------------------------------------
 \include{content/chapter/formular_stuff/erklaerung}
-
+\pagebreak
 % ----------------------------------------------------------------------------------------------------------
 % Abstract
 % ----------------------------------------------------------------------------------------------------------
+\lhead{}
+\rhead{Abstract \thesection}
 \include{content/chapter/abstract/abstract}
 
 
@@ -43,6 +46,8 @@
 % contentsverzeichnis
 % ----------------------------------------------------------------------------------------------------------
 \titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\lhead{}
+\rhead{Contents \thesection}
 \tableofcontents
 \subsectionmark{} % ohne subsectionmark wird mir der content nicht angezeigt
 \pagebreak
@@ -50,13 +55,17 @@
 % ----------------------------------------------------------------------------------------------------------
 % List of Figures
 % ----------------------------------------------------------------------------------------------------------
+\lhead{}
+\rhead{List of Figures \thesection}
 \listoffigures
-
+\newpage
 % ----------------------------------------------------------------------------------------------------------
 % List of Tables (optional)
 % ----------------------------------------------------------------------------------------------------------
-% \listoftables
-
+\lhead{}
+\rhead{List of Tables \thesection}
+\listoftables
+\newpage
 
 % ----------------------------------------------------------------------------------------------------------
 % List of Abbreviations (optional)
@@ -146,6 +155,7 @@
 % Kapitel: Feature selection 5
 % ----------------------------------------------------------------------------------
 \section{Feature Selection}
+\label{sec:feature_selection}
 \input{content/chapter/6_Feature_Selection/6.1_data_preprocessing}
 \input{content/chapter/6_Feature_Selection/6.2_feature_selection_decisiontree}
 
@@ -197,30 +207,33 @@
 % Literatur
 % ----------------------------------------------------------------------------------------------------------
 \lhead{} 
-\rhead{Literaturverzeichnis} 
+\rhead{Bibliography} 
 
 \printbibliography[heading=Literatur,filter=Literatur] 
 
-\pagebreak
+%\pagebreak
+\newpage
 
 % ----------------------------------------------------------------------------------------------------------
 % Anhang
 % ----------------------------------------------------------------------------------------------------------
+\section*{Appendix}
 
 \pagenumbering{Roman}
 \setcounter{page}{1}
-\lhead{Anhang \thesection}
+\lhead{Appendix \thesection}
+\rhead{}
 
 \appendix
-\section*{Appendix}
+
 
 \label{app:perf_script}
 \input{content/chapter/listing/1_go_monitoring_via_prometheus.tex}
 \input{content/chapter/listing/2_Python_from_prom_to_csv.tex}
 \input{content/chapter/listing/3_python_attack_skript.tex}
 
-\input{content/chapter/formular_stuff/appendix_paper_features.tex}
-\input{content/chapter/formular_stuff/appendix_dt_features.tex}
+% \input{content/chapter/formular_stuff/appendix_paper_features.tex}
+% \input{content/chapter/formular_stuff/appendix_dt_features.tex}
 
 \phantomsection
 \addcontentsline{toc}{section}{Anhang}

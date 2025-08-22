@@ -1,37 +1,23 @@
 \subsection{Data Processing and Visualization Tools}
+\label{subsec:data_processing_and_visualization_tools}
 
-This adaptive approach of Anaomaly detection ensures that detection mechanisms remain robust and reliable, even as EVSE infrastructures and their operational conditions continue to evolve. This section introduces the data processing and visualization tools used to implement such adaptable anomaly detection strategies.\\
+This adaptive approach to anomaly detection ensures that detection mechanisms remain robust and reliable, even as EVSE infrastructures and their operational conditions continue to evolve. This chapter introduces the data processing and visualization tools used to implement such adaptable anomaly detection strategies.\\
 % Pandas
-To convert the data into more useful formats, I used \textbf{Pandas}, a fast, powerful, and easy-to-use open-source data analysis tool for Python. It provides expressive data structures such as DataFrame and Series for working with structured and time series data.\\
-I primarily used Pandas to convert my data, which was originally stored in \texttt{.csv} files, into \texttt{.parquet} files. Additionally, I used it to manipulate the dataframes by dropping cells, adding information such as "Attack" or "Benign" tags to almost 7000 rows. This preprocessing step was essential to clean the data before applying machine learning algorithms.\\
-Some other useful key features of Pandas include:
-\begin{itemize}
-    \item Tools for reading and writing data between various formats
-    \item Flexible reshaping and merging of data
-    \item Powerful grouping, aggregation, and transformation operations
-\end{itemize}
-\cite{pandas_wiki}
-\\
-% Matplotlib
-To create diagrams that help me better understand the data, I used a popular plotting library in Python called \textbf{Matplotlib}. Specifically, I used the \texttt{matplotlib.pyplot} module, which is a state-based interface to the Matplotlib library and provides a MATLAB-like way of creating static, animated, and interactive visualizations in Python.\\
-Matplotlib is well-suited for quickly prototyping visualizations thanks to its simple and readable syntax. This allowed me to create a wide range of plots, including, Line Plots, Scatter Plots, Bar Charts, Histrograms and Heatmaps.\\
-These visualizations enabled me to better understand the data structure, identify patterns, and prepare the dataset for further processing.
-\\
-\\
-% Seaborn
-I also used the Seaborn libary it is like the other 2 libaries also an open-source Python libary. It is exspecially know for making statistical graphiscs butilt on top of the matplot lib. Seaborn proves high-level interface for plotting informatikve and statitical plots. It is also closely integrates with Pandas data structure what allows easy visualitzion of whole datasets and enables
-- Plotting of complex relationships
-- aumtomtac aggregation and statistical estimation (Means, confidence intervals, etc)
-- Thematic styling and enhanced color palettes. 
-Therefore it was for me a perfect additon to the pandas and Mathplot libaries.
-\cite{seaborn_wiki}
+To convert the data into more useful formats, \textit{Pandas} was used, a fast, powerful, and easy-to-use open-source data analysis tool for Python. It provides expressive data structures such as DataFrame and Series for working with structured and time series data \cite{pandas_wiki}.\\
+\texttt{pandas} was primarily used to convert the data, which was originally stored in \texttt{CSV} files, into \texttt{PARQUET} files. Additionally, it allowed manipulation of the dataframes by dropping cells, adding information such as attack or benign tags to almost 7000 rows. This preprocessing step was essential to clean the data before applying machine learning algorithms \cite{pandas_wiki}.\\
 
-In addition to Matplotlib and Pandas, I also used the open-source Python library \textbf{Seaborn}. Seaborn is especially known for creating statistical graphics and is built on top of the Matplotlib library. It provides a high-level interface for drawing informative and attractive statistical plots.\\
-Seaborn is closely integrated with Pandas data structures, which makes it easy to visualize entire datasets. This integration enabled me to create complex visualizations with minimal code. Key features of Seaborn include:
+% Matplotlib
+To create diagrams that help better understand the data, a popular plotting library in Python called \textit{Matplotlib} was used. Specifically, the \texttt{matplotlib} module was employed, which is a state-based interface to the \texttt{matplotlib} library and provides a MATLAB-like way of creating static, animated, and interactive visualizations in Python.\\
+\texttt{matplotlib} is well-suited for quickly prototyping visualizations thanks to its simple and readable syntax. This allowed the creation of a wide range of plots, including Line Plots, Scatter Plots, Bar Charts, Histograms, and Heatmaps.\\
+These visualizations enabled a better understanding of the data structure, identification of patterns, and preparation of the dataset for further processing.\\
+
+% Seaborn
+In addition to \texttt{matplotlib} and \texttt{pandas}, the open-source Python library \textit{Seaborn} was also used. Seaborn is especially known for creating statistical graphics and is built on top of the \texttt{matplotlib} library. It provides a high-level interface for drawing informative and attractive statistical plots.\\
+Seaborn is closely integrated with \texttt{pandas} data structures, which facilitates the visualization of entire datasets. This integration enables the creation of complex visualizations with minimal code. Key features of Seaborn include:
+
 \begin{itemize}
-    \item Plotting of complex relationships between multiple variables
-    \item Automatic aggregation and statistical estimation (e.g., means, confidence intervals)
-    \item Thematic styling and enhanced color palettes for better aesthetics
+    \item Plotting of complex relationships between multiple variables.
+    \item Automatic aggregation and statistical estimation (e.g., means, confidence intervals).
+    \item Thematic styling and enhanced color palettes for better aesthetics.
 \end{itemize}
-For these reasons, Seaborn was a perfect addition to the Pandas and Matplotlib libraries in my data analysis workflow.
-\cite{seaborn_wiki}
+For these reasons, Seaborn was a perfect addition to the \texttt{pandas} and \texttt{matplotlib} libraries in the data analysis workflow \cite{seaborn_wiki}.

@@ -1,67 +1,65 @@
 \subsection{Data Preprocessing Steps}
 
-As already mentioned, for the \texttt{CICEVSE2024} dataset, it was only necessary to remove four rows containing \texttt{NaN} values to obtain clean and usable data for the initial processing step. \\
+As already mentioned, for the CICEVSE2024 dataset, it was only necessary to remove four rows containing \texttt{NaN} values to obtain clean and usable data for the initial processing step. \\
 
-For the generated dataset from our environment, I first aimed to include as much benign-status data as possible. Therefore, I made a Prometheus PromQL request to retrieve monitoring data from a night when the environment was not used for other tests (see Appendix~\ref{lst:prometheustocsv_scraper}). \\
+For the dataset generated from the experimental environment, the aim was first to include as much benign-status data as possible. Therefore, a PromQL request was made to retrieve monitoring data from a night when the environment was not used for other tests, as shown in Listing \ref{lst:prometheustocsv_scraper}. \\
 
-Then, I initiated the attacks to monitor the behavior of the HCP and kernel events in our environment under attack conditions (see Appendix~\ref{lst:python_attack_script}).  
+Subsequently, the attacks were initiated to monitor the behavior of the HPC and kernel events in the environment under attack conditions, which can be seen in Listing \ref{lst:python_attack_script}.  
 Table~\ref{tab:attacks} provides an overview of all attacks carried out during the experiment.
 
 \begin{table}[H]
 \centering
-\caption{Overview of executed attacks}
-\label{tab:attacks}
 \begin{tabular}{|l|l|l|}
 \hline
 \textbf{Attack Type} & \textbf{Tool} & \textbf{Description / Parameters} \\
 \hline
 Slowloris          & Python script  & 500 sockets against target host \\
-UDP Flood          & hping3         & --flood --udp -p 80 \\
-ICMP Flood         & hping3         & --flood -1 \\
-TCP Flood          & hping3         & --flood -p 80 \\
-Synonymous Flood   & hping3         & --flood --rand-source -p 80 \\
+UDP-Flood          & hping3         & \texttt{--flood --udp -p 80} \\
+ICMP-Flood         & hping3         & \texttt{--flood -1} \\
+TCP-Flood          & hping3         & \texttt{--flood -p 80} \\
+SYN-Flood          & hping3         & \texttt{--flood --rand-source -p 80} \\
 Portscan           & nmap           & 1000 iterations, \texttt{-sT} scan \\
-OS Fingerprinting  & nmap           & 1000 iterations, \texttt{-O} scan \\
-Aggressive Scan    & nmap           & 1000 iterations, \texttt{-A} scan \\
+OS-Fingerprinting  & nmap           & 1000 iterations, \texttt{-O} scan \\
+Aggressive-Scan    & nmap           & 1000 iterations, \texttt{-A} scan \\
 \hline
 \end{tabular}
+\caption{Overview of executed attacks.}
+\label{tab:attacks}
 \end{table}
 
-
-With the generated log file, it was possible to assign the correct attack intervals to the \texttt{dataset.csv} file for machine learning training and data analysis.  
+Using the generated log file, the correct attack intervals could be assigned to the dataset file for machine learning training and data analysis.  
 Table~\ref{tab:intervals} shows the exact time periods used.
 
 \begin{table}[H]
 \centering
-\caption{Attack intervals during data collection}
-\label{tab:intervals}
 \begin{tabular}{|l|l|l|}
 \hline
 \textbf{Start Time} & \textbf{End Time} & \textbf{Attack Type} \\
 \hline
 2025-07-23 06:52:35 & 2025-07-23 07:07:35 & Slowloris \\
-2025-07-23 07:27:35 & 2025-07-23 07:42:35 & UDP Flood \\
-2025-07-23 08:25:45 & 2025-07-23 08:47:50 & ICMP Flood \\
-2025-07-23 08:50:49 & 2025-07-23 09:05:49 & TCP Flood \\
-2025-07-23 09:05:49 & 2025-07-23 09:08:49 & Synonymous Flood \\
+2025-07-23 07:27:35 & 2025-07-23 07:42:35 & UDP-Flood \\
+2025-07-23 08:25:45 & 2025-07-23 08:47:50 & ICMP-Flood \\
+2025-07-23 08:50:49 & 2025-07-23 09:05:49 & TCP-Flood \\
+2025-07-23 09:05:49 & 2025-07-23 09:08:49 & SYN-Flood \\
 2025-07-23 09:10:44 & 2025-07-23 09:20:44 & Portscan \\
-2025-07-23 09:35:44 & 2025-07-23 09:45:44 & Synonymous Flood \\
-2025-07-23 10:00:44 & 2025-07-23 10:10:44 & OS Fingerprinting \\
-2025-07-23 10:25:44 & 2025-07-23 10:35:44 & Aggressive Scan \\
+2025-07-23 09:35:44 & 2025-07-23 09:45:44 & SYN-Flood \\
+2025-07-23 10:00:44 & 2025-07-23 10:10:44 & OS-Fingerprinting \\
+2025-07-23 10:25:44 & 2025-07-23 10:35:44 & Aggressive-Scan \\
 2025-07-23 10:50:44 & 2025-07-23 11:00:44 & Slowloris \\
-2025-07-23 11:10:21 & 2025-07-23 11:18:21 & UDP Flood \\
-2025-07-23 11:28:21 & 2025-07-23 11:36:21 & ICMP Flood \\
-2025-07-23 11:46:21 & 2025-07-23 11:54:21 & TCP Flood \\
+2025-07-23 11:10:21 & 2025-07-23 11:18:21 & UDP-Flood \\
+2025-07-23 11:28:21 & 2025-07-23 11:36:21 & ICMP-Flood \\
+2025-07-23 11:46:21 & 2025-07-23 11:54:21 & TCP-Flood \\
 2025-07-23 12:08:55 & 2025-07-23 12:12:21 & Portscan \\
-2025-07-23 12:22:21 & 2025-07-23 12:30:21 & Synonymous Flood \\
+2025-07-23 12:22:21 & 2025-07-23 12:30:21 & SYN-Flood \\
 \hline
 \end{tabular}
+\caption{Attack intervals during data collection.}
+\label{tab:intervals}
 \end{table}
 
+These preprocessing steps enabled a meaningful exploratory data analysis, which allowed for the identification of key features for training machine learning models to achieve optimal results.  
+This step is essential, as most models do not perform well with 900 or more features. This is also demonstrated in source \cite{EV_Security}, where the best results were achieved using only 11 to 20 key features. \\
 
-With these preprocessing steps, a meaningful exploratory data analysis was possible, allowing us to proceed with key feature selection to train the machine learning models for optimal results.  
-This step is essential, as most models do not perform well with 900 or more features. This is also demonstrated in \cite{EV_Security}, where the best results were achieved using only 11 to 20 key features. \\
+Moreover, using too many features would lead to performance issues on the Raspberry Pi in the live system, as it would be required to query and process values for up to 900 features every 5 to 60 seconds.
 
-Furthermore, using too many features would lead to performance issues on the Raspberry Pi in the live system, as it would need to query and process values for up to 900 features every 5 to 60 seconds.
-
-% Bild einfügen welches das beweißt das ich performance probleme bekomme wenn ich 900 features abfrage
+% Insert figure demonstrating performance issues when querying 900 features

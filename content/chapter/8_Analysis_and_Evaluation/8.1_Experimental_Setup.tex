@@ -1,22 +1,22 @@
 \subsection{Experimental Setup and Evaluation Metrics}
 
-To evaluate the model objectively and verify whether it correctly detects anomalies, this work follows a systematic approach. Clearly separated test data from the dataset \textit{CICEVSE2024} as well as from the dataset collected in the course of this work were used. In addition, the model was tested in a live environment with real-time detection.\\
+To evaluate the model objectively and verify whether it correctly detects anomalies, this work follows a systematic approach. Clearly separated test data from the dataset CICEVSE2024 as well as from the dataset collected in the course of this work were used. In addition, the model was tested in a live environment with real-time detection.\\
 
-The dataset \textit{CICEVSE2024} and the dataset collected for this work were already split into training and test data, as described in Chapter~7.1 \textit{LSTM Architecture and Preprocessing}. The test data was used to evaluate the model’s performance and consists of fixed time periods to ensure that the LSTM correctly utilizes its memory and detects attacks based on changes in the event data over time.\\
+The dataset CICEVSE2024 and the dataset collected for this work were already split into training and test data, as described in chapter \ref{subsec:lstm_architecture_and_preprocessing}. The test data was used to evaluate the model’s performance and consist of fixed time periods to ensure that the LSTM correctly utilizes its memory and detects attacks based on changes in the event data over time.\\
 
-The trained LSTM model as well as the scaling parameters (StandardScaler) were exported and deployed for live classification on a resource-constrained Raspberry Pi system. Using Prometheus as a monitoring solution and a specially developed performance exporter (see Appendix~\pageref{code:perf_exporter}), measurement data could be provided at the desired interval.\\
+The trained LSTM model as well as the scaling parameters (\texttt{StandardScaler}) were exported and deployed for live classification on a resource-constrained Raspberry Pi system. Using Prometheus as a monitoring solution and a specially developed performance exporter as shown in Listing \ref{lst:perf-prometheus-exporter}, measurement data could be provided at the desired interval.\\
 
-To realistically test the model’s behavior, various attack patterns (e.g., flooding, scans, Slowloris) were executed in an automated manner with precise time logging (see Appendix~\pageref{code:xy}). This enabled a targeted analysis of the classification output during typical threat scenarios.\\
+To realistically test the model’s behavior, various attack patterns (e.g. Flooding, Scans, Slowloris) were executed in an automated manner with precise time logging as shown in Listing \ref{lst:python_attack_script}. This enabled a targeted analysis of the classification output during typical threat scenarios.\\
 
-\textbf{Evaluation Metrics:} The quality of anomaly detection was assessed using established metrics for binary classification:
+\texttt{Evaluation Metrics:} The quality of anomaly detection was assessed using established metrics for binary classification:
 \begin{itemize}
-    \item \textbf{Accuracy}: Proportion of correctly classified samples relative to the total number of samples.
-    \item \textbf{Precision}: Proportion of actual attacks among all samples classified as attacks.
-    \item \textbf{Recall}: Proportion of detected attacks among all actual attacks.
-    \item \textbf{F1-Score}: Harmonic mean of Precision and Recall, particularly relevant for imbalanced classes.
-    \item \textbf{Visualization}: Additionally, distribution and edge cases were illustrated using the Confusion Matrix, ROC Curve, and Precision-Recall Curve.
+    \item \texttt{Accuracy}: Proportion of correctly classified samples relative to the total number of samples.
+    \item \texttt{Precision}: Proportion of actual attacks among all samples classified as attacks.
+    \item \texttt{Recall}: Proportion of detected attacks among all actual attacks.
+    \item \texttt{F1-Score}: Harmonic mean of Precision and Recall, particularly relevant for imbalanced classes.
+    \item \texttt{Visualization}: Additionally, distribution and edge cases were illustrated using the Confusion Matrix, ROC Curve, and Precision-Recall Curve.
 \end{itemize}
 
 The focus, beyond the pure detection rate, was placed on the robustness of the model with respect to different types of attacks and possible data deviations during live operation.\\
 
-These metrics serve as the foundation for the detailed result analysis in the following section and allow for a transparent evaluation of the practical applicability of the approach.
+These metrics serve as the foundation for the detailed result analysis in the following chapter and allow for a transparent evaluation of the practical applicability of the approach.

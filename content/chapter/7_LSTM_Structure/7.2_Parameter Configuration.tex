@@ -1,36 +1,42 @@
 \subsection{Parameter Configuration and Hyperparameter Optimization}
-In this Chapter we take a closer look at the choosen structure from the LSTM architecture and explain it.\\
+In this chapter, a closer look is taken at the chosen structure of the LSTM architecture and it is explained.\\
 
 First, the training and test datasets are loaded, and the necessary configurations for features and labels are prepared. This ensures that the datasets are consistently structured before being passed into the model, with a clear separation between feature values and corresponding labels.\\
 
-In the next step, the data is preprocessed: the class labels are converted from strings (``benign'', ``attack'') into binary values (0 and 1). In addition, all feature values are standardized using the \texttt{StandardScaler}. This scaling step is crucial for training an LSTM model effectively. Unscaled data can lead to numerical instability and poor convergence in neural networks. LSTMs are particularly sensitive to the scale of input features, because they use sigmoid activation functions, which operate best when input values are within a small, centered range. If the features have very different magnitudes, such as bytes transmitted (e.g., in thousands) versus CPU usage (e.g., in fractions), the model may focus disproportionately on features with larger numeric ranges, leading to biased learning and suboptimal performance \cite{input_scaling_important}. By standardizing the input features (i.e., transforming them to have zero mean and unit variance), we ensure that the LSTM model can learn temporal dependencies more effectively and converge faster during training.\\
+In the next step, the data is preprocessed. The class labels are converted from strings (``benign'', attack) into binary values (0 and 1). In addition, all feature values are standardized using the \texttt{StandardScaler}. This scaling step is crucial for training an LSTM model effectively. Unscaled data can lead to numerical instability and poor convergence in neural networks. LSTMs are particularly sensitive to the scale of input features because they use sigmoid activation functions, which operate best when input values are within a small, centered range. If the features have very different magnitudes, such as bytes transmitted (e.g., in thousands) versus CPU usage (e.g., in fractions), the model may focus disproportionately on features with larger numeric ranges, leading to biased learning and suboptimal performance \cite{input_scaling_important}. By standardizing the input features (i.e., transforming them to have zero mean and unit variance), it is ensured that the LSTM model can learn temporal dependencies more effectively and converge faster during training.\\
 
-Since LSTMs are specifically designed to recognize temporal patterns, the dataset is further transformed into time sequences. A sliding window is applied over the data to generate fixed-length sequences. Importantly, only those sequences are retained in which all labels within the window are identical, meaning that the entire sequence is consistently classified as either \textit{benign} or \textit{attack}. This avoids ambiguous targets and ensures that the model learns clear and consistent classification patterns.\\
+Since LSTMs are specifically designed to recognize temporal patterns, the dataset is further transformed into time sequences. A sliding window is applied over the data to generate fixed-length sequences. Importantly, only those sequences are retained in which all labels within the window are identical, meaning that the entire sequence is consistently classified as either benign or attack. This avoids ambiguous targets and ensures that the model learns clear and consistent classification patterns.\\
 
-Table~\ref{tab:lstm_components} summarizes the key components used in the LSTM model configuration. 
+Table~\ref{tab:lstm_components} summarizes the key components and layers used in the LSTM model configuration. 
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|p{5cm}|p{6cm}|}
 \hline
-\textbf{Component} & \textbf{What it is} & \textbf{Why it is used} \\
+\textbf{Component / Layer} & \textbf{Description / Configuration} & \textbf{Function / Role} \\
 \hline
-\textbf{Dropout} & A regularization technique that randomly sets a fraction of input units to zero during training. & Dropout reduces overfitting by randomly disabling parts of the model during training, which leads to a more robust and generalized model.\\
+\textbf{First LSTM layer} & LSTM with 50 units, returns full sequences  & Captures temporal dependencies across input sequences and allows stacking of a second LSTM layer  \\
 \hline
-\textbf{Sigmoid} & An activation function that outputs values between 0 and 1. & Because it is ideal for binary classification (benign, attack) by producing probabilities for class 0 or 1. \\
+\textbf{Dropout after first LSTM} & Regularization layer that sets 20\% of inputs to zero during training  & Reduces overfitting and improves model generalization  \\
 \hline
-\textbf{Binary Cross-Entropy} & A loss function for binary classification tasks. & Measures the information loss between predicted probabilities and true binary labels, reflecting both class separation and probability calibration. \\
+\textbf{Second LSTM layer} & LSTM with 15 units, returns only the final output  & Processes temporal dependencies at a deeper level and condenses sequence information  \\
 \hline
-\textbf{Adam} & An optimization algorithm that combines momentum and adaptive learning rates. & Enables fast convergence and performs well with noisy and sparse gradients by adaptively scaling learning rates for each parameter. \\
+\textbf{Dropout after second LSTM} & Regularization layer that sets 20\% of inputs to zero during training  & Further reduces overfitting and stabilizes learning  \\
+\hline
+\textbf{Dense output layer} & Fully connected layer with 1 unit and sigmoid activation  & Produces probability for binary classification (benign or attack)  \\
+\hline
+\textbf{Binary Cross-Entropy} & Loss function for binary classification tasks  & Measures the information loss between predicted probabilities and true binary labels  \\
+\hline
+\textbf{Adam} & Optimization algorithm combining momentum and adaptive learning rates  & Enables fast convergence and handles noisy and sparse gradients effectively  \\
 \hline
 \end{tabular}
-\caption{Explanation of key components used in the LSTM model configuration.\cite{dropout}\cite{sigmoid}\cite{loss_function}\cite{adam}}
+\caption{Explanation of key components and layers used in the LSTM model configuration \cite{dropout}\cite{sigmoid}\cite{loss_function}\cite{adam}.}
 \label{tab:lstm_components}
 \end{table}
 
-The model itself is designed as a stacked LSTM architecture. The first LSTM layer returns full sequences, allowing a second LSTM layer to process temporal dependencies at a deeper level. After each LSTM layer, dropout regularization is applied to improve the model’s ability to generalize. The final output layer uses a sigmoid activation function to generate the probability of a sample belonging to either the \textit{benign} or \textit{attack} class. This design provides a balanced trade-off between complexity and interpretability, making it well-suited for binary time-series classification tasks.\\
+The model itself is designed as a stacked LSTM architecture. The first LSTM layer returns full sequences, allowing a second LSTM layer to process temporal dependencies at a deeper level. After each LSTM layer, dropout regularization is applied to improve the model’s ability to generalize. The final output layer uses a sigmoid activation function to generate the probability of a sample belonging to either the benign or attack class. This design provides a balanced trade-off between complexity and interpretability, making it well-suited for binary time-series classification tasks.\\
 
 The training process is then carried out on the prepared sequences. The model is trained for 20 epochs, with a batch size of 32 samples. The batch size does not directly influence the final outcome of the model but impacts training efficiency and resource usage. Smaller batch sizes can produce noisier gradient updates, which may sometimes help generalization, while larger batches result in smoother updates at the cost of increased memory consumption. A batch size of 32 is a common compromise between these extremes \cite{batch_size_lstm}.\\
 
 In addition, it should be noted that an early stopping function could be used instead of training for a fixed number of 20 epochs. Early stopping monitors the validation performance and automatically stops training when no further improvements are observed, thereby saving computation time and preventing overfitting. However, to keep the implementation simple, this additional feature is not discussed in detail in this work.\\
 
-After gaining an understanding of how we designed the LSTM architecture for our use case and the meaning of its various functions, we will review the results in the next chapter.
+After gaining an understanding of how the LSTM architecture was designed for this use case and the meaning of its various functions, the results will be reviewed in the next chapter.

@@ -1,72 +1,65 @@
 \subsection{Holistic Dataset Comparison}
-So far, we have provided an overview of the relevance and challenges involved in securing EVSE environments. We discussed the fundamental knowledge required before developing an anomaly detection system, gained insight into related work in this area, and explored how it can inform our own approach.\\
-We have also examined how data can be acquired from EVSE environments and how \texttt{Prometheus} can be used to collect and store this data.\\
-All of these sections and subsections are essential for understanding the context of our work and for showing how it is possible to develop an anomaly detection system for EVSE environments based on the analysis of hardware events and the collected data.\\
-In this section, we focus on the Exploratory Data Analysis (EDA) of the collected data. EDA is a crucial step in understanding the data, identifying patterns, and preparing for further analysis or modeling. We use Python and its data analysis libraries within a Jupyter Notebook environment to visualize and explore the collected data. The Python libraries utilized for data processing and visualization are explained in more detail in Chapter~2.2 (Fundamentals), providing a foundational understanding of the tools applied in this analysis. Establishing this methodological basis is crucial, as the quality of the results in the following chapters and significantly influences how well anomaly detection using machine learning models will perform and how quickly they will learn. Therefore, we need to answer the following questions:
-\begin{itemize}
-    \item Is there any noise in the data, and how significant is it?
-    \item Can we observe meaningful distributions in the features over time and in relation to attacks?
-    \item How strong are the correlations between the different features?
-    \item Can we identify and define the most important features?
-\end{itemize}
-Answering these questions through Exploratory Data Analysis (EDA) provides a foundation for effective feature selection and model performance \cite{google2024EDAFeatureSelection} futhremore we will compare all results with the dataset CICEVSE2024 to garanty to have a meaningful result and can transfer the results to other charging station setups.\\
-We start with analizing the framework conditions of both datasets, the public dataset CICEVSE2024 and the self-collected dataset.\\
-% warum ist der Vergleich wichige? zwischen den beiden Datensätzen
-The paper \textit{Enhancing EV Charging Station Security Using a Multi-dimensional Dataset}~\cite{EV_Security} and my work pursue the same goal: detecting anomalies through the analysis of HCP and kernel events. Therefore, it is essential to compare the underlying datasets on which the machine learning algorithms are trained. Such a comparison enables validation of the respective approaches and helps determine whether the results can be generalized.
+So far, an overview of the relevance and challenges involved in securing EVSE environments has been provided. The fundamental knowledge required before developing an anomaly detection system has been discussed, insight into related work in this area has been gained, and the ways in which it can inform the current approach have been explored.\\
+The acquisition of data from EVSE environments and the use of Prometheus to collect and store this data have also been examined.\\
 
-% Beschreibung der Datensaätze: Herkunft Umfang, Struktur, Einschrnänkunen
-We tried to get as close as possible to the environment of the paper \textit{Enhancing EV Charging Station Security Using a Multi-dimensional Dataset}\\
+All of these chapters and subchapters are essential for understanding the context of this work and for showing how it is possible to develop an anomaly detection system for EVSE environments based on the analysis of hardware events and the collected data.\\
+In this chapter, the focus is on the Exploratory Data Analysis (EDA) of the collected data. EDA is a crucial step in understanding the data, identifying patterns, and preparing for further analysis or modeling. Python and its data analysis libraries are used within a Jupyter Notebook environment to visualize and analyze the collected data. The Python libraries utilized for data processing and visualization are explained in more detail in chapter \ref{subsec:data_processing_and_visualization_tools}, providing a foundational understanding of the tools applied in this analysis. Establishing this methodological basis is crucial, as the quality of the results in the following chapters significantly influences how well anomaly detection using machine learning models will perform and how quickly they will learn.\\
+
+All results will be compared with the dataset CICEVSE2024 to guarantee a meaningful outcome and to allow the transfer of results to other charging station setups.\\
+The framework conditions of both datasets, the dataset CICEVSE2024 and the self-collected dataset, are analyzed first.\\
+The paper "Enhancing EV Charging Station Security Using a Multi-dimensional Dataset" \cite{EV_Security} and this work pursue the same goal: detecting anomalies through the analysis of HPC and kernel events. Therefore, it is essential to compare the underlying datasets on which the machine learning algorithms are trained. Such a comparison enables validation of the respective approaches and helps determine whether the results can be generalized.\\
+% Description of datasets: origin, scope, structure, limitations
+An attempt was made to get as close as possible to the environment of the paper "Enhancing EV Charging Station Security Using a Multi-dimensional Dataset".\\
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{pics/setup_public_paper.png}
-  \caption{setup EV Charing Station from \cite{EV_Security}}
+  \caption{Setup of the Electric Vehicles Charging Station \cite{EV_Security}}
   \label{fig:setup_public_paper}
 \end{figure}
-We also used a Raspberry Pi to represent the EVSE-B and employed a wattmeter to monitor power consumption. The combination of HCP events, kernel events, and power consumption measurements will be discussed in future work. As mentioned in Chapter~\texttt{Data Sources for EVSE Anomaly Detection}, we also used the \texttt{perf} tool to monitor the various events.\\
-\\
+A Raspberry Pi was also used to represent the EVSE-B, and a wattmeter was employed to monitor power consumption. The combination of HPC events, kernel events, and power consumption measurements will be discussed in future work. As mentioned in chapter \ref{subsec:data_sources_for_evse_anomaly_detection}, the \texttt{perf} tool was also used to monitor the various events.\\
 
-Therefore, we are able to observe approximately 900 events in our dataset, which is comparable to the reference dataset. The complete observation period spans from \texttt{2025-07-22T18:00:00} to \texttt{2025-07-23T12:52:10}, with a sampling interval of 5 seconds, identical to the compared dataset \cite{EV_Security}. This results in approximately 8,000 data rows and 905 columns. Importantly, no missing (\texttt{NaN}) values are present, and all measurements were collected using the \texttt{perf} tool, producing logically consistent outputs as described in the chapter \textit{Data Sources for EVSE Anomaly Detection}.  
+Therefore, approximately 900 events can be observed in the dataset, which is comparable to the reference dataset. The complete observation period spans from \texttt{2025-07-22T18:00:00} to \texttt{2025-07-23T12:52:10}, with a sampling interval of 5 seconds, identical to the compared dataset \cite{EV_Security}. This results in approximately 8,000 data rows and 905 columns. Importantly, no missing (\texttt{NaN}) values are present, and all measurements were collected using the \texttt{perf} tool, producing logically consistent outputs as described in the chapter \ref{subsec:data_sources_for_evse_anomaly_detection}.\\ 
 
-To ensure comparability, features distributed across multiple CPU cores (e.g., \texttt{cpu=0,1,2,3}) were aggregated using appropriate \texttt{perf} flags. This not only prevents data loss but also reduces the number of distinct features, thereby aligning the dataset structure more closely with the reference dataset \texttt{CICEVSE2024}. 
+To ensure comparability, features distributed across multiple CPU cores (e.g., \texttt{cpu=0,1,2,3}) were aggregated using appropriate \texttt{perf} flags. This not only prevents data loss but also reduces the number of distinct features, thereby aligning the dataset structure more closely with the reference dataset CICEVSE2024. \\
 
-To establish a clear starting point for the later feature analysis, we first refer to the selected features presented in the paper \textit{Enhancing EV Charging Station Security Using A Multi-dimensional Dataset: CICEVSE2024} \cite{EV_Security}. These selected features provide a foundation for comparison and help guide our own selection process.  
+To establish a clear starting point for the later feature analysis, the selected features presented in the paper "Enhancing EV Charging Station Security Using a Multi-dimensional Dataset: CICEVSE2024" \cite{EV_Security} are first referred to. These selected features provide a foundation for comparison and help guide the own selection process.  \\
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{pics/selected_features_paper.png}
-  \caption{Selected HPC and Kernel Features from \cite{EV_Security}}
+  \caption{Selected Hardware Performance Counter and Kernel Features from the paper "Enhancing EV Charging Station Security Using a Multi-dimensional Dataset" \cite{EV_Security}}
   \label{fig:selected_features_paper}
 \end{figure}
 
-The \texttt{CICEVSE2024} dataset itself consists of the same 905 event types and comprises approximately 8,500 rows. Timestamps are recorded as floating-point values representing the time of each measurement. Like our dataset, it was collected using the \texttt{perf} tool, ensuring high precision and consistency across all recorded events \cite{EV_Security}. Out of the entire dataset, only four rows contain \texttt{NaN} values across all features.\\
+The CICEVSE2024 dataset itself consists of the same 905 event types and comprises approximately 8,500 rows. Timestamps are recorded as floating-point values representing the time of each measurement. Like the self-collected dataset, it was collected using the \texttt{perf} tool, ensuring high precision and consistency across all recorded events \cite{EV_Security}. Out of the entire dataset, only four rows contain \texttt{NaN} values across all features.\\
 At first glance, one might assume a high level of noise when considering the Z-Score. However, in this case, the values do not represent random noise or errors but instead correspond to peak values during attacks. Thus, the actual noise level in both datasets is very low, which can also be observed later in the direct feature comparison. Such rows with high peaks can therefore be considered meaningful signals rather than noise.\\
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/cicevse2024_features_boxplot.png}
-  \caption{Boxplot of the CICEVSE2024 Dataset Features}
+  \caption{Boxplot of the CICEVSE2024 Dataset Features.}
   \label{fig:cicevse2024_features_boxplot}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/features_boxplot_own.png}
-  \caption{Boxplot of the self-collected Dataset Features}
+  \caption{Boxplot of the self-collected Dataset Features.}
   \label{fig:features_boxplot_own}
 \end{figure}
 
-When comparing the two datasets, it becomes apparent that the self-collected dataset exhibits more outliers than the \texttt{CICEVSE2024} dataset. This is primarily due to the fact that it contains a significantly larger amount of benign data, which makes the attack data stand out more clearly as outliers. Furthermore, the benign data in the self-collected dataset is much quieter and less variable than in the \texttt{CICEVSE2024} dataset. This reduced variability becomes especially evident in the analysis of individual features, as can be observed in the following graphs using the \texttt{L1-icache-loads} feature as an example.
+When comparing the two datasets, it becomes apparent that the self-collected dataset exhibits more outliers than the CICEVSE2024 dataset. This is primarily due to the fact that it contains a significantly larger amount of benign data, which makes the attack data stand out more clearly as outliers. Furthermore, the benign data in the self-collected dataset is much quieter and less variable than in the CICEVSE2024 dataset. This reduced variability becomes especially evident in the analysis of individual features, as can be observed in the following graphs using the L1-icache-loads feature as an example.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/L1-icache-loads_public.png}
-  \caption{L1-icache-loads timeline (CICEVSE2024)}
+  \caption{\texttt{L1-icache-loads} timeline (CICEVSE2024).}
   \label{fig:L1-icache-loads_public}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/L1-icache-loads_own.png}
-  \caption{L1-icache-loads timeline (self-collected)}
+  \caption{\texttt{L1-icache-loads} timeline (self-collected).}
   \label{fig:L1-icache-loads_own}
 \end{figure}

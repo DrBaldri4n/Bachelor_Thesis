@@ -1,8 +1,8 @@
 \subsection{Results of Anomaly Detection Using the Machine Learning Model}
 
-So far we got a good understanding of the data and the features that are important for the detection of attacks as well as the configuration of the LSTM model. Now we will take a closer look at the results of the anomaly detection using the presented LSTM model on the CEVSE2024 dataset and the dataset recoreded for this work.\\
+Up to this point, a good understanding of the data and the features relevant for the detection of attacks has been established as well as the configuration of the LSTM model has been obtained. Now a closer look is taken at the results of the anomaly detection using the presented LSTM model on the CEVSE2024 dataset and the dataset recorded for this work.\\
 
-The following table presents the key classification metrics for the anomaly detection task for the dataset recoreded for this work.
+The following table presents the key classification metrics for the anomaly detection task for the test dataset recorded for this work.
 \begin{table}[h]
 \centering
 \caption{Classification Metrics for Self-Collected Dataset}
@@ -20,9 +20,7 @@ Weighted avg    & 0.87 & 0.88 & 0.87 & 2,025 \\
 \end{tabular}
 \end{table}
 
-`Precision'' quantifies how many positive predictions were correct, ``Recall'' measures the proportion of actual positives detected, and ``F1-Score'' is the harmonic mean of precision and recall.\\
-
-The model shows high accuracy (0.88) on the self-collected dataset, with strong performance in identifying benign cases (Class 0). In contrast, precision and recall for attack detection (Class 1) are lower (0.61 and 0.50, respectively), which reduces the macro average and weighted average metrics.\\
+The model shows high accuracy (0.88) on the self-collected dataset, with strong performance in identifying benign cases (Class 0). In contrast, precision and recall for attack detection (Class 1) are lower (0.60 and 0.52, respectively), which reduces the macro average and weighted average metrics.\\
 
 The following table presents the key classification metrics for the anomaly detection task for the CEVSE2024 dataset.
 \begin{table}[h]
@@ -45,14 +43,13 @@ Weighted avg    & 0.99 & 0.99 & 0.99 & 1,773 \\
 
 In direct comparison, the results on the CEVSE2024 dataset are significantly stronger than those obtained on the self-collected dataset. The LSTM model achieves an overall accuracy of 0.99 with nearly perfect precision, recall, and F1-scores for both benign and attack classes. In contrast, the results on the self-collected dataset show lower precision and recall values for attack detection, which reduces the macro average and weighted average metrics.\\
 
-As already observed during the exploratory data analysis, a central reason for these differences lies in the characteristics of the attack traces themselves. In the self-collected dataset, the peaks of scanning attacks such as UDP scans, port scans, and aggressive scans are barely distinguishable from benign traffic. In the CEVSE2024 dataset, however, these attacks produce clearly visible deviations in the selected features, which allows the LSTM model to separate them more reliably from benign cases.\\
+As already observed during the exploratory data analysis, a central reason for these differences lies in the characteristics of the attack traces themselves. In the self-collected dataset, the peaks of scanning attacks such as OS-Fingerprinting, Portscans, and Aggressive-Scans are barely distinguishable from benign traffic. In the CEVSE2024 dataset, however, these attacks produce clearly visible deviations in the selected features, which allows the LSTM model to separate them more reliably from benign cases.\\
 
 Potential reasons for these discrepancies are not related to hardware, since the experimental setup was reproduced one-to-one. More plausible explanations include background processes that cannot be controlled to exactly the same degree, or differences in the tools and parameter settings used to perform the scans. These factors can lead to stronger variations in the selected features and thus improve the separability of attack traffic. \\
 
-It is important to note that the LSTM model was not altered between the experiments. The same architecture and hyperparameters were applied to both datasets, and the same feature set was used, namely the features identified during feature selection with the Decision Tree Classifier on the self-collected dataset.\\
+It is important to note that the LSTM model was not altered between the experiments. The same architecture and hyperparameters were applied to both datasets, and the same feature set was used, namely the features identified during feature selection with the Decision-Tree-Classifier on the self-collected dataset.\\
 
 These results are consistent and remain unchanged when analyzing the confusion matrix and the direct detection of attacks. The following figures illustrate these results by comparing the self-collected dataset with the CEVSE2024 dataset. Nevertheless, it can be observed that flooding attacks have a high probability of being detected across different datasets, as long as the hardware is similar and simulates a charging station environment. This aspect will be discussed in more detail in a later chapter.\\
-
 \begin{figure}[H]
   \centering
   \begin{minipage}{0.48\textwidth}
@@ -67,72 +64,69 @@ These results are consistent and remain unchanged when analyzing the confusion m
     \caption{Confusion matrix for the CEVSE2024 dataset}
     \label{fig:confusion_matrix_CEVSE2024}
   \end{minipage}
-  \caption*{It can be observed that in the self-collected dataset the majority of samples are benign, while in the CEVSE2024 dataset, the majority are attack samples, which results in a mirrored appearance of the confusion matrices.}
+  \caption*{It can be observed that in the self-collected dataset, the majority of samples are benign, while in the CEVSE2024 dataset the majority are attack samples. This results in a mirrored appearance of the confusion matrices.}
 \end{figure}
 
 \begin{table}[H]
 \centering
 \begin{minipage}{0.48\textwidth}
 \centering
-\caption{Misclassified attacks – Self-Collected Dataset}
+\caption{Misclassified attacks, Self-collected Dataset}
 \begin{tabular}{lcc}
 \hline
 Attack & Misclassified & Total \\
 \hline
-Aggressive Scan      & 36 & 59 \\
-OS Fingerprinting    & 34 & 59 \\
+Aggressive-Scan      & 36 & 59 \\
+OS-Fingerprinting    & 34 & 59 \\
 Slowloris            & 25 & 45 \\
-Port Scan            &  9 & 59 \\
-Synonymous Flood     &  3 & 76 \\
-TCP Flood            &  0 &  3 \\
+Portscan             &  9 & 59 \\
+SYN-Flood            &  3 & 76 \\
+TCP-Flood            &  0 &  3 \\
 \hline
 \end{tabular}
 \end{minipage}\hfill
 \begin{minipage}{0.48\textwidth}
 \centering
-\caption{Misclassified attacks – CEVSE2024 Dataset}
+\caption{Misclassified attacks, CEVSE2024 Dataset}
 \begin{tabular}{lcc}
 \hline
 Attack & Misclassified & Total \\
 \hline
-Aggressive-Scan           & 2  & 39  \\
-Backdoor                  & 2  & 591 \\
-Cryptojacking             & 0  & 213 \\
-ICMP-Flood                & 0  & 41  \\
-ICMP-Fragmentation        & 0  & 78  \\
-ICMP-Fragmentation\_Old   & 0  & 41  \\
-OS-Fingerprinting         & 0  & 47  \\
-Port-Scan                 & 0  & 40  \\
-Push-Ack-Flood            & 0  & 43  \\
-Service-Detection         & 0  & 42  \\
-SYN-Flood                 & 0  & 49  \\
-SYN-Stealth               & 0  & 37  \\
-TCP-Flood                 & 0  & 44  \\
-UDP-Flood                 & 0  & 45  \\
-Vuln-Scan                 & 0  & 46  \\
+Aggressive-Scan          & 2  & 39  \\
+Backdoor                 & 2  & 591 \\
+Cryptojacking            & 0  & 213 \\
+ICMP-Fragmentation       & 0  & 78  \\
+ICMP-Fragmentation Old   & 0  & 41  \\
+ICMP-Flood               & 0  & 41  \\
+OS-Fingerprinting        & 0  & 47  \\
+Portscan                & 0  & 40  \\
+Push-Ack Flood           & 0  & 43  \\
+Service Detection        & 0  & 42  \\
+SYN-Flood                & 0  & 49  \\
+SYN-Stealth              & 0  & 37  \\
+TCP-Flood                & 0  & 44  \\
+UDP-Flood                & 0  & 45  \\
+Vulnerability Scan       & 0  & 46  \\
 \hline
 \end{tabular}
 \end{minipage}
-\caption*{Scanning attacks are generally more difficult to detect, as reflected by the misclassification rates in both datasets; in particular, the aggressive-scan attack shows a misclassification even in the CEVSE2024 dataset.}
+\caption*{Scanning attacks are generally more difficult to detect, as reflected by the misclassification rates in both datasets. In particular, the Aggressive-Scan shows a misclassification even in the CEVSE2024 dataset.}
 \end{table}
-
-
 \begin{figure}[H]
   \centering
   \begin{minipage}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{pics/roc_curve.png}
-    \caption{Roc curve for the self-collected dataset}
+    \caption{ROC curve for the self-collected dataset}
     \label{fig:roc_curve}
   \end{minipage}\hfill
   \begin{minipage}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{pics/roc_curve_CEVSE2024.png}
-    \caption{Roc curve for the CEVSE2024 dataset}l
+    \caption{ROC curve for the CEVSE2024 dataset}
     \label{fig:roc_curve_CEVSE2024}
   \end{minipage}
   \caption*{The ROC curves illustrate the model's performance in distinguishing between benign and attack traffic. The self-collected dataset shows a lower area under the curve (AUC) compared to the CEVSE2024 dataset, indicating that the model is less effective at correctly distinguishing attacks from benign traffic on the self-collected dataset. This lower AUC reflects a higher rate of misclassifications and a reduced overall discriminative capability, which can be attributed to the varying strong peaks observed in the self-collected dataset, as already illustrated in the EDA. In contrast, the high AUC on the CEVSE2024 dataset indicates near-perfect separation between benign and attack samples.}
-
 \end{figure}
 
 \begin{figure}[H]
@@ -166,22 +160,23 @@ Vuln-Scan                 & 0  & 46  \\
     \caption{Recall statistics for the CEVSE2024 dataset}
     \label{fig:recall_stat_tests_CEVSE2024}
   \end{minipage}
-  \caption*{It can be observed, similar to the previous results, that some attacks (e.g., OS Fingerprinting, Aggressive Scan) are more difficult to detect in the self-collected dataset. More importantly, however, this figure shows that the p-value in both datasets is close to zero. This indicates that the LSTM model’s detection is not random, but rather that the benign and attack data differ significantly, confirming the reliability of the results.}
-
+  \caption*{It can be observed, similar to the previous results, that some attacks (e.g., OS-Fingerprinting, Aggressive-Scan) are more difficult to detect in the self-collected dataset. More importantly, however, this figure shows that the p-value in both datasets is lower than 0.05. This indicates that the LSTM model’s detection is not random \cite{p_value}, but rather that the benign and attack data differ significantly, confirming the reliability of the results.}
 \end{figure}
 
-After the testing in analyzing with the monitored system, the work also includes testing the LSTM model in a live system. This is important to ensure that the model can detect attacks even if the data does not have exactly the same timestamps, and to observe what happens if the environment is overloaded so that new data does not arrive at the same intervals as the training data when the processor is under heavy load.\\
+After testing and analyzing with the monitored system, this work also includes testing the LSTM model in a live system. This is important to ensure that the model can detect attacks even if the data do not have the same timestamps, and to observe what happens if the environment is overloaded so that new data do not arrive at the same intervals as the training data when the processor is under heavy load.\\
+
 At first, it was necessary to store the LSTM model as a .keras file and also save the scaler as a .pkl file. This makes it possible to scale all live data in the same way as the training data.\\
 
 The system continuously collects live performance metrics from a monitored environment, which is only possible through collection with the \texttt{perf} tool and processing in the Prometheus database. Some metrics require the calculation of differences between successive measurements to reflect true activity changes and avoid permanent accumulation, as this can cause problems with the LSTM model if a counter is reset unexpectedly.\\
-The collected data is normalized using a pre-trained scaler and then fed into a pre-trained LSTM model to predict whether the system is under attack or operating normally. The results, including probabilities for both benign and attack states, are logged into a CSV file for further analysis, while real-time feedback is printed to the console. This approach allows monitoring and detecting anomalies in a live environment, closely simulating conditions that differ from the controlled training setup.
 
-After live testing the system for about six hours and 25 Attacks the following results were achieved:
+The collected data are normalized using a pre-trained scaler and then fed into a pre-trained LSTM model to predict whether the system is under attack or operating normally. The results, including probabilities for both benign and attack states, are logged into a \texttt{CSV} file for further analysis, while real-time feedback is printed to the console. This approach allows monitoring and detecting anomalies in a live environment, closely simulating conditions that differ from the controlled training setup.\\
+
+After live testing the system for about six hours and 25 attacks, the following results are shown in figure \ref{fig:live_data_classification_results}:
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{pics/live_data_classification_results.png}
-  \caption{Live Data Classification Results}
+  \caption{Live data classification results}
   \label{fig:live_data_classification_results}
 \end{figure}
 
-Here we can observe that the equal attack probability was about 20\% and reached the highest peaks during the flooding attacks, in the best case approaching almost 100\% attack probability. Additionally, during the time sequence when the port scan attacks occurred, the attack probability increased significantly, leading to a clear rise. As expected, before the scanning attacks, OS fingerprinting and aggressive scans showed only small peaks, as did the Slowloris attack.\\
+It can be observed that the equal attack probability was about 20\% and reached the highest peaks during the flooding attacks, in the best case approaching almost 100\% attack probability. Additionally, during the time sequence when the Portscan attacks occurred, the attack probability increased significantly, leading to a clear rise. As expected, before the scanning attacks, OS-Fingerprinting and Aggressive-Scans showed only small peaks, as did the Slowloris attack.\\

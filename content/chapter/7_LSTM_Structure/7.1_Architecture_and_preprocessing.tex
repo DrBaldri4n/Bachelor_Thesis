@@ -1,19 +1,19 @@
 \subsection{LSTM Architecture and Preprocessing}
+\label{subsec:lstm_architecture_and_preprocessing}
 
-A foundational understanding of the structure and principles of Long Short-Term Memory (LSTM) networks has already been provided in Chapter~2\_Fundamentals. In this section, I will delve deeper into the specific architecture of the LSTM used in this work and highlight the importance of time-step-based data analysis in this context.\\
+A foundational understanding of the structure and principles of Long Short-Term Memory (LSTM) networks has already been provided. In this chapter, the specific architecture of the LSTM used in this work is described in more detail, highlighting the importance of time-step-based data analysis in this context.\\
+
 Time-step analysis offers a major advantage of LSTMs over other deep neural network (DNN) models, particularly in the detection of cyber attacks or anomalies. Most such events do not occur abruptly. Instead, they often emerge gradually over time \cite{attack_over_time}. LSTM networks are specifically designed to recognize temporal patterns and sequential dependencies, making them especially well-suited for identifying these slow-developing behaviors.\\
-\\
-In order to detect time-dependent attacks effectively, the training data must be well-organized so that the models can learn time-relevant patterns, both during training and later in the live system. Therefore, the preprocessing steps used to split the data into training and test sets must be carefully structured and should not be randomized.\\
-At this stage, the data has generally already been cleaned, as described in Chapter~6 Feature~Selection.\\
-In this work, the dataset was divided into ten chronological blocks, each sorted by time steps. Seven of these blocks were combined to form the training dataset, while the remaining three were used for testing. The choice of blocks for training and testing ensured that both sets contained approximately the same distribution of the labels \texttt{benign} and \texttt{attack}, thereby avoiding class imbalance. Furthermore, the label distribution was verified for both sets to confirm that they were well-balanced and representative of the overall dataset.\\
 
-\begin{quote}
+In order to detect time-dependent attacks effectively, the training data must be well-organized so that the models can learn time-relevant patterns, both during training and later in the live system. Therefore, the preprocessing steps used to split the data into training and test sets must be carefully structured and should not be randomized.\\
+At this stage, the data has generally already been cleaned, as described in chapter \ref{sec:feature_selection}.\\
+In this work, the dataset was divided into ten chronological blocks, each sorted by time steps. Seven of these blocks were combined to form the training dataset, while the remaining three were used for testing. The choice of blocks for training and testing ensured that both sets contained approximately the same distribution of the labels benign and attack, thereby avoiding class imbalance. Furthermore, the label distribution was verified for both sets to confirm that they were well-balanced and representative of the overall dataset.\\
+
 The label distributions in both the training and test datasets were carefully controlled to ensure a balanced representation of benign and attack instances. The resulting proportions are as follows:
 
 \begin{itemize}
-    \item Training dataset: benign = 86.82\%, attack = 13.18\%
-    \item Test dataset: benign = 84.93\%, attack = 15.07\%
+    \item Training dataset: benign = 86.82\%, attack = 13.18\%.
+    \item Test dataset: benign = 84.93\%, attack = 15.07\%.
 \end{itemize}
 
 This balanced distribution allows the model to learn effectively while being evaluated on data that realistically reflects the variety of scenarios encountered in practice.
-\end{quote}
